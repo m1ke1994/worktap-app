@@ -1,5 +1,7 @@
 
 <script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router'; // <-- Импортируем useRoute
 import HeaderApp from './components/HeaderApp.vue';
 import ProblemWorkTap from './components/ProblemWorkTap.vue';
 import MainContent from './components/MainContent.vue';
@@ -16,13 +18,21 @@ onMounted(() => {
     once: true, // анимация только один раз
     easing: 'ease-in-out-quad',
   })
-})
+});
+const route = useRoute();
+
+// Скрываем шапку и подвал на странице логина
+const showLayout = computed(() => {
+  return route.path !== '/login';
+  // Если нужно скрывать на нескольких страницах:
+  // return !['/login', '/register'].includes(route.path);
+});
 
 </script>
 
 <template>
   <div class="min-h-screen bg-white">
-    <HeaderApp></HeaderApp>
+    <HeaderApp v-if="showLayout"></HeaderApp>
    <!--  <section class="bg-[#F7F6FF]" data-aos="fade-up" data-aos-duration="800" >
       <MainContent />
     </section>
@@ -44,9 +54,9 @@ onMounted(() => {
       <router-view></router-view>
     </div>
     
-    <footer class="bg-[#F7F6FF]">
-      <Footer></Footer>
-    </footer>
+    
+      <Footer v-if="showLayout"></Footer>
+    
   </div>
 </template>
 

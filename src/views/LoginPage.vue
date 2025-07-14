@@ -1,5 +1,47 @@
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const email = ref('')
+const password = ref('')
+const remember = ref(false)
+
+function onLogin() {
+  console.log('Login', { email: email.value, password: password.value, remember: remember.value })
+}
+
+function onGoogleLogin() {
+  console.log('Google login')
+}
+
+function onForgot() {
+  console.log('Forgot password')
+}
+
+// Тексты и индикаторы
+const slides = [
+  'Worktap — ваш надёжный путь к быстрым и качественным фриланс-услугам.',
+  'Тысячи проверенных специалистов готовы взяться за ваш проект прямо сейчас.',
+  'Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!'
+]
+
+const currentIndex = ref(0)
+
+// Автоматическое переключение слайдов
+let interval = null
+
+onMounted(() => {
+  interval = setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % slides.length
+  }, 5000) // каждые 5 секунд
+})
+
+onUnmounted(() => {
+  clearInterval(interval)
+})
+</script>
+
 <template>
-  <div class="container flex min-h-screen">
+  <div class="flex min-h-screen">
     <!-- Левая часть: форма входа -->
     <div class="login-box w-1/2 flex items-center justify-center p-10">
       <div class="form-wrapper w-full max-w-md space-y-6">
@@ -73,38 +115,22 @@
     >
       <div class="overlay absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4">
         <img src="/src/assets/bg-login.png" alt="" class="hidden" />
-        <p class="text-gray-800 text-sm">
-          Worktap — это маркетплейс фриланс услуг, где можно купить услугу как товар в магазине или создать индивидуальный заказ на бирже.
+        <p class="text-gray-800 text-sm transition-all duration-300">
+          {{ slides[currentIndex] }}
         </p>
         <div class="dots flex justify-center mt-3">
-          <span class="dot w-2 h-2 bg-yellow-400 rounded-full mx-1 opacity-50"></span>
-          <span class="dot-active w-2 h-2 bg-yellow-400 rounded-full mx-1"></span>
-          <span class="dot w-2 h-2 bg-yellow-400 rounded-full mx-1 opacity-50"></span>
+          <span
+            v-for="(slide, index) in slides"
+            :key="index"
+            class="w-2 h-2 bg-yellow-400 rounded-full mx-1"
+            :class="{ 'opacity-100': index === currentIndex, 'opacity-50': index !== currentIndex }"
+          ></span>
         </div>
+
+        
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
 
-const email = ref('')
-const password = ref('')
-const remember = ref(false)
-
-function onLogin() {
-  // TODO: реализовать логику входа
-  console.log('Login', { email: email.value, password: password.value, remember: remember.value })
-}
-
-function onGoogleLogin() {
-  // TODO: интеграция с Google OAuth
-  console.log('Google login')
-}
-
-function onForgot() {
-  // TODO: перенаправить на страницу восстановления пароля
-  console.log('Forgot password')
-}
-</script>
