@@ -23,7 +23,7 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-white">
     <HeaderApp></HeaderApp>
-    <section class="bg-[#F7F6FF]" data-aos="fade-up" data-aos-duration="800" >
+   <!--  <section class="bg-[#F7F6FF]" data-aos="fade-up" data-aos-duration="800" >
       <MainContent />
     </section>
     <section class="currentWorks mt-10 conteiner">
@@ -39,7 +39,11 @@ onMounted(() => {
     </section>
     <section data-aos="fade-up" data-aos-duration="800">
       <HelpBisness> </HelpBisness>
-    </section>
+    </section> -->
+    <div>
+      <router-view></router-view>
+    </div>
+    
     <footer class="bg-[#F7F6FF]">
       <Footer></Footer>
     </footer>
