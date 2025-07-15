@@ -4,7 +4,7 @@
            <div class="container mx-auto px-4">
         <nav class="flex justify-between items-center py-4">
           <div class="flex items-center">
-            <img src="/src/assets/logo.svg" alt="Логотип" class="h-8">
+            <img src="/assets/logo.svg" alt="Логотип" class="h-8">
           </div>
           <ul class="hidden md:flex gap-8 text-lg font-medium">
             <li class="group relative">

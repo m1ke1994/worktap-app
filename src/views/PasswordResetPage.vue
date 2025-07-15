@@ -80,7 +80,7 @@ onUnmounted(() => clearInterval(interval))
 
     <!-- Правая колонка (без изменений) -->
     <div class="w-1/2 relative bg-cover bg-center"
-         :style="{ backgroundImage: `url('/src/assets/bg-login2.png')` }">
+         :style="{ backgroundImage: `url('/assets/bg-login2.png')` }">
       <div
         class="absolute bottom-10 left-10 right-10 bg-white/90 rounded-lg p-4 backdrop-blur">
         <p class="text-sm text-gray-800 transition-all duration-300">

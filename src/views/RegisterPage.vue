@@ -153,7 +153,7 @@ onUnmounted(() => clearInterval(interval));
 
     <!-- Правая половина: фон + слайдер -->
     <div class="w-1/2 relative bg-cover bg-center"
-         :style="{ backgroundImage: `url('/src/assets/bg-login4.png')` }">
+         :style="{ backgroundImage: `url('/assets/bg-login4.png')` }">
       <div class="absolute bottom-10 left-10 right-10 bg-white/90 rounded-lg p-4">
         <p class="text-gray-800 text-sm transition-all duration-300">
           {{ slides[currentIndex] }}

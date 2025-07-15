@@ -31,6 +31,7 @@ const advantages = [
 <template>
   <div class="hero-section">
     <div class="container">
+        <h2 class="font-bold text-3xl text-left mb-10 text-white">Как WorkTap помогает бизнесу?</h2>
       <div class="content">
         <div class="advantages">
           <div 
@@ -58,7 +59,7 @@ const advantages = [
 .hero-section {
   width: 100%;
   min-height: 100vh;
-  background-image: url('/src/assets/bg.png');
+  background-image: url('/assets/bg.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

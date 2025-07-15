@@ -100,7 +100,7 @@ onUnmounted(() => {
           class="btn-google w-full py-3 rounded-full bg-gray-800 text-white flex items-center justify-center"
         >
           <img
-            src="../assets/google-icon.svg"
+            src="/assets/google-icon.svg"
             alt="Google"
             class="w-5 h-5 mr-2"
           />
@@ -118,12 +118,12 @@ onUnmounted(() => {
     <!-- Правая часть: изображение с оверлеем -->
     <div
       class="image-box w-1/2 relative bg-cover bg-center"
-      :style="{ backgroundImage: `url('/src/assets/bg-login1.png')` }"
+      :style="{ backgroundImage: `url('/public/assets/bg-login1.png')` }"
     >
       <div
         class="overlay absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4"
       >
-        <img src="/src/assets/bg-login1.png" alt="" class="hidden" />
+        <img src="/assets/bg-login1.png" alt="" class="hidden" />
         <p class="text-gray-800 text-sm transition-all duration-300">
           {{ slides[currentIndex] }}
         </p>

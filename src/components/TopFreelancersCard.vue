@@ -14,13 +14,13 @@ defineProps({
     <div class="flex justify-between gap-4 ">
       <div class="left relative w-24 h-24 flex-shrink-0">
         <img 
-          :src="'src/assets/' + image" 
+          :src="'/assets/' + image" 
           alt="Фото фрилансера" 
           class="w-full h-full object-cover rounded-lg"
         >
         <img 
           class="absolute -top-0 -right-0 w-4 h-4" 
-          :src="status ? '/src/assets/online.svg' : '/src/assets/offline.svg'" 
+          :src="status ? '/assets/online.svg' : '/assets/offline.svg'" 
           :alt="status ? 'online' : 'offline'"
         >
       </div>

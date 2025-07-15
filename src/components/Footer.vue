@@ -1,3 +1,10 @@
+
+<script setup>
+import { defineProps } from 'vue';
+const props = defineProps({
+  openModal: { type: Function, required: true }
+})
+</script>
 <template>
   <!-- Ваш существующий код -->
 
@@ -6,34 +13,35 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <!-- Колонка 1 - О компании -->
         <div>
-          <h3 class="text-lg font-bold mb-4 text-gray-800">О компании</h3>
+          <h3 class="text-lg font-bold mb-4 text-gray-800">Топ категории</h3>
           <ul class="space-y-2">
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">О нас</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Карьера</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Блог</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Партнеры</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Тексты и переводы</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Разработка</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Дизайн</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Соцсети и реклама</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Дизайн</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">SEO и оптимизация</a></li>
           </ul>
         </div>
 
         <!-- Колонка 2 - Для фрилансеров -->
         <div>
-          <h3 class="text-lg font-bold mb-4 text-gray-800">Для фрилансеров</h3>
+          <h3 class="text-lg font-bold mb-4 text-gray-800">О Проекте</h3>
           <ul class="space-y-2">
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Как работать</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Тарифы</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Портфолио</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">FAQ</a></li>
+            <li @click="props.openModal" class="text-gray-600 hover:text-[#1DBF73] transition">Как работать</li>
+            <li><a href="#" class="text-gray-600 hover:text-[#364940] transition">О нас</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Политика Приватности</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Правила Пользования </a></li>
           </ul>
         </div>
 
         <!-- Колонка 3 - Для бизнеса -->
         <div>
-          <h3 class="text-lg font-bold mb-4 text-gray-800">Для бизнеса</h3>
+          <h3 class="text-lg font-bold mb-4 text-gray-800">Поддержка </h3>
           <ul class="space-y-2">
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Разместить заказ</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Каталог фрилансеров</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Безопасная сделка</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Кейсы</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Контакты</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition"> Политика Безопасности</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">FAQ</a></li>
           </ul>
         </div>
 
