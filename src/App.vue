@@ -23,9 +23,9 @@ const route = useRoute();
 
 // Скрываем шапку и подвал на странице логина
 const showLayout = computed(() => {
-  return route.path !== '/login';
+ /*  return route.path !== '/login' ; */
   // Если нужно скрывать на нескольких страницах:
-  // return !['/login', '/register'].includes(route.path);
+  return !['/login', '/password-reset','/recover-password','/register'].includes(route.path);
 });
 
 </script>

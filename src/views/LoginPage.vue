@@ -1,43 +1,48 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-
-const email = ref('')
-const password = ref('')
-const remember = ref(false)
+import { ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const email = ref("");
+const password = ref("");
+const remember = ref(false);
 
 function onLogin() {
-  console.log('Login', { email: email.value, password: password.value, remember: remember.value })
+  console.log("Login", {
+    email: email.value,
+    password: password.value,
+    remember: remember.value,
+  });
 }
 
 function onGoogleLogin() {
-  console.log('Google login')
+  console.log("Google login");
 }
 
 function onForgot() {
-  console.log('Forgot password')
+  console.log("Forgot password");
 }
 
 // Тексты и индикаторы
 const slides = [
-  'Worktap — ваш надёжный путь к быстрым и качественным фриланс-услугам.',
-  'Тысячи проверенных специалистов готовы взяться за ваш проект прямо сейчас.',
-  'Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!'
-]
+  "Worktap — ваш надёжный путь к быстрым и качественным фриланс-услугам.",
+  "Тысячи проверенных специалистов готовы взяться за ваш проект прямо сейчас.",
+  "Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!",
+];
 
-const currentIndex = ref(0)
+const currentIndex = ref(0);
 
 // Автоматическое переключение слайдов
-let interval = null
+let interval = null;
 
 onMounted(() => {
   interval = setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % slides.length
-  }, 5000) // каждые 5 секунд
-})
+    currentIndex.value = (currentIndex.value + 1) % slides.length;
+  }, 5000); // каждые 5 секунд
+});
 
 onUnmounted(() => {
-  clearInterval(interval)
-})
+  clearInterval(interval);
+});
 </script>
 
 <template>
@@ -72,20 +77,16 @@ onUnmounted(() => {
           </label>
           <div class="options flex items-center justify-between">
             <label class="flex items-center text-gray-600">
-              <input
-                v-model="remember"
-                type="checkbox"
-                class="mr-2"
-              />
+              <input v-model="remember" type="checkbox" class="mr-2" />
               Запомнить меня
             </label>
-            <button
+            <router-link
+              to="/password-reset"
               type="button"
-              @click="onForgot"
-              class="text-sm text-orange-500 underline"
+              class="text-sm text-orange-500 hover:underline"
             >
               Забыли пароль?
-            </button>
+            </router-link>
           </div>
           <button
             type="submit"
@@ -98,12 +99,18 @@ onUnmounted(() => {
           @click="onGoogleLogin"
           class="btn-google w-full py-3 rounded-full bg-gray-800 text-white flex items-center justify-center"
         >
-          <img src="../assets/google-icon.svg" alt="Google" class="w-5 h-5 mr-2" />
+          <img
+            src="../assets/google-icon.svg"
+            alt="Google"
+            class="w-5 h-5 mr-2"
+          />
           Или войдите с помощью Google
         </button>
         <p class="text-center text-gray-600">
-          У вас все еще нет аккаунта? 
-          <a href="#" class="text-orange-500 underline">Зарегистрируйтесь бесплатно!</a>
+          У вас все еще нет аккаунта?
+          <router-link to="/register" class="text-orange-500 hover:underline transition-all duration-300"
+            >Зарегистрируйтесь бесплатно!</router-link
+          >
         </p>
       </div>
     </div>
@@ -111,10 +118,12 @@ onUnmounted(() => {
     <!-- Правая часть: изображение с оверлеем -->
     <div
       class="image-box w-1/2 relative bg-cover bg-center"
-      :style="{ backgroundImage: `url('/src/assets/bg-login.png')` }"
+      :style="{ backgroundImage: `url('/src/assets/bg-login1.png')` }"
     >
-      <div class="overlay absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4">
-        <img src="/src/assets/bg-login.png" alt="" class="hidden" />
+      <div
+        class="overlay absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4"
+      >
+        <img src="/src/assets/bg-login1.png" alt="" class="hidden" />
         <p class="text-gray-800 text-sm transition-all duration-300">
           {{ slides[currentIndex] }}
         </p>
@@ -123,14 +132,13 @@ onUnmounted(() => {
             v-for="(slide, index) in slides"
             :key="index"
             class="w-2 h-2 bg-yellow-400 rounded-full mx-1"
-            :class="{ 'opacity-100': index === currentIndex, 'opacity-50': index !== currentIndex }"
+            :class="{
+              'opacity-100': index === currentIndex,
+              'opacity-50': index !== currentIndex,
+            }"
           ></span>
         </div>
-
-        
       </div>
     </div>
   </div>
 </template>
-
-
