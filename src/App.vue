@@ -3,11 +3,6 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router'; // <-- Импортируем useRoute
 import HeaderApp from './components/HeaderApp.vue';
-import ProblemWorkTap from './components/ProblemWorkTap.vue';
-import MainContent from './components/MainContent.vue';
-import CurrentWorks from './components/CurrentWorks.vue';
-import TopFreelancers from './components/TopFreelancers.vue';
-import HelpBisness from  './components/HelpBisness.vue';
 import Footer from './components/Footer.vue';
 
 import { onMounted } from 'vue'
@@ -23,8 +18,7 @@ const route = useRoute();
 
 // Скрываем шапку и подвал на странице логина
 const showLayout = computed(() => {
- /*  return route.path !== '/login' ; */
-  // Если нужно скрывать на нескольких страницах:
+ 
   return !['/login', '/password-reset','/recover-password','/register'].includes(route.path);
 });
 

@@ -1,16 +1,72 @@
+<script setup>
+import ProblemWorkTap from '../components/ProblemWorkTap.vue';
+import MainContent from '../components/MainContent.vue';
+import CurrentWorks from '../components/CurrentWorks.vue';
+import TopFreelancers from '../components/TopFreelancers.vue';
+import HelpBisness from  '../components/HelpBisness.vue';
+</script>
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
-    <h1 class="text-4xl font-bold text-blue-600 mb-4">Добро пожаловать в WorkTap</h1>
-    <p class="text-lg text-gray-600 text-center max-w-xl mb-6">
-      WorkTap — это биржа для заказчиков и фрилансеров. Размещайте заказы или находите работу, которая вам по душе.
-    </p>
-    <router-link to="/login">
-      <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-        Войти
-      </button>
-    </router-link>
-  </div>
+<main id="content" >
+  <section
+    className="bg-[#F7F6FF]"
+    data-aos="fade-up"
+    data-aos-duration="800"
+    aria-label="Основной контент"
+  >
+    <MainContent />
+  </section>
+
+  
+  <section
+    className="currentWorks mt-10 container mx-auto"
+    aria-labelledby="works-heading"
+  >
+    <h2 id="works-heading" className="sr-only">
+      Текущие работы и фрилансеры
+    </h2>
+
+   
+    <article
+      data-aos="fade-up"
+      data-aos-duration="800"
+      data-aos-delay="100"
+      aria-label="Текущие заказы"
+    >
+      <CurrentWorks />
+    </article>
+
+   
+    <aside
+      data-aos="fade-up"
+      data-aos-duration="800"
+      data-aos-delay="100"
+      aria-label="Топ‑фрилансеры"
+    >
+      <TopFreelancers />
+    </aside>
+
+   
+    <article
+      data-aos="fade-up"
+      data-aos-duration="800"
+      data-aos-delay="100"
+      aria-label="Проблемные задачи"
+    >
+      <ProblemWorkTap />
+    </article>
+  </section>
+
+  
+  <section
+    data-aos="fade-up"
+    data-aos-duration="800"
+    aria-label="Помощь бизнесу"
+  >
+    <HelpBisness />
+  </section>
+</main>
+
+
 </template>
 
-<script setup>
-</script>
+

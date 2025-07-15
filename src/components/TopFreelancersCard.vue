@@ -10,8 +10,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="freelancers-card bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow flex flex-col gap-4">
-    <div class="flex justify-between gap-4">
+  <div class="freelancers-card bg-white rounded-lg shadow-lg p-6 flex flex-col gap-4 hover:shadow-2xl hover:translate-y-[-5px] transition-all duration-300 cursor-pointer min-h-[250px]">
+    <div class="flex justify-between gap-4 ">
       <div class="left relative w-24 h-24 flex-shrink-0">
         <img 
           :src="'src/assets/' + image" 

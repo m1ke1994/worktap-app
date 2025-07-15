@@ -25,12 +25,12 @@
             </li>
           </ul>
           <div class="flex gap-3">
-            <button class="font-bold text-[#1DBF73] border-2 border-[#1DBF73] rounded-lg px-4 py-1.5 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base md:px-6 md:py-2">
+            <router-link to="/register"  class="font-bold text-[#1DBF73] border-2 border-[#1DBF73] rounded-lg px-4 py-1.5 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base md:px-6 md:py-2">
               Регистрация
-            </button>
-            <button class="font-bold text-[#1DBF73] border-2 border-[#1DBF73] rounded-lg px-4 py-1.5 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base md:px-6 md:py-2">
+            </router-link>
+            <router-link to="/login" class="font-bold text-[#1DBF73] border-2 border-[#1DBF73] rounded-lg px-4 py-1.5 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base md:px-6 md:py-2">
               Войти
-            </button>
+            </router-link>
           </div>
         </nav>
       </div>
