@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { useRouter } from "vue-router";
-const router = useRouter();
+
 const email = ref("");
 const password = ref("");
 const remember = ref(false);
@@ -118,7 +117,7 @@ onUnmounted(() => {
     <!-- Правая часть: изображение с оверлеем -->
     <div
       class="image-box w-1/2 relative bg-cover bg-center"
-      :style="{ backgroundImage: `url('/public/assets/bg-login1.png')` }"
+      :style="{ backgroundImage: `url('/assets/bg-login1.png')` }"
     >
       <div
         class="overlay absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4"

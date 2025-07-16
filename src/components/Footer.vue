@@ -2,7 +2,8 @@
 <script setup>
 import { defineProps } from 'vue';
 const props = defineProps({
-  openModal: { type: Function, required: true }
+  openModal: { type: Function, required: true },
+  openModalRules: { type: Function, required: true }
 })
 </script>
 <template>
@@ -31,7 +32,7 @@ const props = defineProps({
             <li @click="props.openModal" class="text-gray-600 hover:text-[#1DBF73] transition">Как работать</li>
             <li><a href="#" class="text-gray-600 hover:text-[#364940] transition">О нас</a></li>
             <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Политика Приватности</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Правила Пользования </a></li>
+            <li @click="props.openModalRules" class="text-gray-600 hover:text-[#1DBF73] transition">Правила Пользования</li>
           </ul>
         </div>
 
@@ -40,7 +41,6 @@ const props = defineProps({
           <h3 class="text-lg font-bold mb-4 text-gray-800">Поддержка </h3>
           <ul class="space-y-2">
             <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">Контакты</a></li>
-            <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition"> Политика Безопасности</a></li>
             <li><a href="#" class="text-gray-600 hover:text-[#1DBF73] transition">FAQ</a></li>
           </ul>
         </div>

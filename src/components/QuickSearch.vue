@@ -31,7 +31,7 @@ const query = ref('')
         <input
           v-model="query"
           type="text"
-          placeholder="Что нужно сделать?"
+          placeholder="Укажите категорию..."
           aria-label="Поисковый запрос"
           class="w-full rounded-full bg-transparent px-4 py-3 pr-28 text-sm focus:outline-none"
         />

@@ -43,7 +43,7 @@ const showLayout = computed(() => {
 
 <template>
   <div class="min-h-screen bg-white">
-    <HeaderApp v-if="showLayout"></HeaderApp>
+    <HeaderApp  v-if="showLayout"></HeaderApp>
 
     <div>
       <router-view></router-view>
@@ -70,6 +70,7 @@ const showLayout = computed(() => {
     </Transition>
 
     <Footer
+      :openModalRules="openModalRules"
       :openModal="openModal"
       v-if="showLayout"
     ></Footer>

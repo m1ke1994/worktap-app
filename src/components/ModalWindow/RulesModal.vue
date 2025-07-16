@@ -1,5 +1,6 @@
 <script setup >
-
+import { defineEmits } from 'vue';
+const emit=defineEmits(['close'])
 
 
 
@@ -8,7 +9,7 @@
 
 <template>
   <!-- Overlay -->
-   <div  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+   <div @click.self="emit('close')" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
     <!-- Click‑away area -->
     <div class="absolute inset-0"/>
 
@@ -102,7 +103,7 @@
 
         <!-- Action button -->
         <div class="mt-8 flex justify-center">
-          <button
+          <button  @click="emit('close')"
             class="px-10 py-2 rounded-full font-semibold text-white bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400"
            
           >

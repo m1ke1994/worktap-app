@@ -4,6 +4,8 @@ import LoginPage from '../views/LoginPage.vue'
 import PasswordResetPage from '../views/PasswordResetPage.vue'
 import RecoverPasswordPage from '../views/RecoverPasswordPage.vue'
 import RegisterPage from '../views/RegisterPage.vue'
+import AllWorks from '../views/AllWorks.vue'
+import ProfileUsersDashbord from '../views/ProfileUsersDashbord/ProfileUsersDashbord.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
@@ -11,7 +13,10 @@ const routes = [
    { path: '/password-reset', name: 'PasswordResetPage', component: PasswordResetPage },
    { path: '/recover-password',name: 'RecoverPasswordPage', component: RecoverPasswordPage },
    { path: '/register',name: 'RegisterPage', component: RegisterPage },
+   { path: '/all-works', name: 'AllWorks', component:AllWorks},
+  { path: '/profile', name: 'ProfileUsersDashbord', component:ProfileUsersDashbord},
 ]
+
 
 const router = createRouter({
   history: createWebHistory(),
