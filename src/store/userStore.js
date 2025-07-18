@@ -1,18 +1,44 @@
+// store/userStore.js
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    isAuthenticated: false,
-    userData: null
+    user: null,
+    loading: false,
   }),
   actions: {
-    login(user) {
-      this.userData = user
-      this.isAuthenticated = true
+    async fetchProfile() {
+      const access = localStorage.getItem('access')
+      if (!access) {
+        this.user = null
+        return
+      }
+      this.loading = true
+      try {
+        const resp = await fetch("http://localhost:8000/api/accounts/profile/", {
+          headers: { Authorization: `Bearer ${access}` }
+        })
+        if (resp.ok) {
+          const data = await resp.json()
+          this.user = data
+        } else {
+          // Токен просрочен/невалиден
+          this.user = null
+          localStorage.removeItem('access')
+          localStorage.removeItem('refresh')
+        }
+      } catch {
+        this.user = null
+      }
+      this.loading = false
+    },
+    setUser(user) {
+      this.user = user
     },
     logout() {
-      this.userData = null
-      this.isAuthenticated = false
+      this.user = null
+      localStorage.removeItem('access')
+      localStorage.removeItem('refresh')
     }
   }
 })

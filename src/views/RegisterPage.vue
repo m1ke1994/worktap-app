@@ -1,19 +1,41 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../store/userStore";
 
-/* --- регистрационные данные --- */
+const router = useRouter();
+const userStore = useUserStore();
+
 const firstName = ref("");
 const lastName  = ref("");
 const email     = ref("");
-const phone     = ref("+7 ");   // то, что видит пользователь
-const phoneRaw  = ref("+7");    // «сырое» значение для отправки
+const phone     = ref("+7 ");
+const phoneRaw  = ref("+7");
 const password  = ref("");
 const confirm   = ref("");
 const role      = ref("executor");
 
-/* форматируем «+79991234567» → «+7 999 123‑45‑67» */
+const errorMessage = ref("");
+const successMessage = ref("");
+const loading = ref(false);
+
+const slides = [
+  "Worktap — это маркетплейс фриланс‑услуг, где можно купить услугу как товар в магазине или создать индивидуальный заказ на бирже.",
+  "Тысячи проверенных специалистов готовы взяться за ваш проект прямо сейчас.",
+  "Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!"
+];
+const currentIndex = ref(0);
+let interval = null;
+
+onMounted(() => {
+  interval = setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % slides.length;
+  }, 5000);
+});
+onUnmounted(() => clearInterval(interval));
+
 function prettify(raw) {
-  const d = raw.slice(2);                       // 10 цифр
+  const d = raw.slice(2);
   const p = [
     d.slice(0, 3), d.slice(3, 6),
     d.slice(6, 8), d.slice(8, 10),
@@ -26,49 +48,89 @@ function prettify(raw) {
     (p[3] ? "-" + p[3] : "");
 }
 
-/* обработчик ввода телефона */
 function onPhoneInput(e) {
-  let raw = e.target.value.replace(/[^\d+]/g, ""); // оставляем только + и цифры
-
-  // гарантируем начало +7
+  let raw = e.target.value.replace(/[^\d+]/g, "");
   if (!raw.startsWith("+")) raw = "+" + raw;
   if (!raw.startsWith("+7")) raw = "+7" + raw.replace(/^\+?\d*/, "");
-
-  raw = raw.slice(0, 12);        // +7 + 10 цифр = 12 символов
-
-  phoneRaw.value = raw;          // для бэкенда
+  raw = raw.slice(0, 12);
+  phoneRaw.value = raw;
   phone.value    = prettify(raw);
 }
 
-function onRegister() {
-  console.log("Register", {
-    firstName : firstName.value,
-    lastName  : lastName.value,
-    email     : email.value,
-    phoneRaw  : phoneRaw.value,  // отправлять удобнее это
-    password  : password.value,
-    confirm   : confirm.value,
-    role      : role.value,
-  });
+// ОСНОВНАЯ РЕГИСТРАЦИЯ
+async function onRegister() {
+  errorMessage.value = "";
+  successMessage.value = "";
+  loading.value = true;
+
+  const payload = {
+    first_name: firstName.value,
+    last_name: lastName.value,
+    email: email.value,
+    phone: phoneRaw.value,
+    password: password.value,
+    confirm: confirm.value,
+    role: role.value,
+  };
+
+  try {
+    // 1. Регистрируем пользователя
+    const response = await fetch("http://localhost:8000/api/accounts/register/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      // 2. Автоматически логинимся через SimpleJWT
+      const loginResp = await fetch("http://localhost:8000/api/accounts/token/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: email.value, password: password.value }),
+      });
+      const loginData = await loginResp.json();
+
+      if (loginResp.ok && loginData.access) {
+        localStorage.setItem("access", loginData.access);
+        localStorage.setItem("refresh", loginData.refresh);
+
+        // 3. Подгружаем профиль в Pinia-store
+        const profileResp = await fetch("http://localhost:8000/api/accounts/profile/", {
+          headers: { Authorization: `Bearer ${loginData.access}` },
+        });
+        if (profileResp.ok) {
+          const user = await profileResp.json();
+          userStore.setUser(user);
+        }
+
+        // Очищаем форму и редиректим на профиль
+        firstName.value = "";
+        lastName.value = "";
+        email.value = "";
+        phone.value = "+7 ";
+        phoneRaw.value = "+7";
+        password.value = "";
+        confirm.value = "";
+        role.value = "executor";
+        successMessage.value = "Регистрация прошла успешно! Перенаправление в личный кабинет...";
+        setTimeout(() => router.push('/profile'), 800);
+      } else {
+        errorMessage.value = "Регистрация успешна, но вход не выполнен. Попробуйте войти вручную.";
+      }
+    } else {
+      if (typeof data === "object" && data !== null) {
+        errorMessage.value = Object.values(data).flat().join(" ");
+      } else {
+        errorMessage.value = "Ошибка регистрации!";
+      }
+    }
+  } catch (err) {
+    errorMessage.value = "Нет связи с сервером. Попробуйте позже.";
+  } finally {
+    loading.value = false;
+  }
 }
-
-/* --- слайдер (без изменений) --- */
-const slides = [
-  "Worktap — это маркетплейс фриланс‑услуг, где можно купить услугу как товар в магазине или создать индивидуальный заказ на бирже.",
-  "Тысячи проверенных специалистов готовы взяться за ваш проект прямо сейчас.",
-  "Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!",
-];
-
-const currentIndex = ref(0);
-let interval = null;
-
-onMounted(() => {
-  interval = setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % slides.length;
-  }, 5000);
-});
-
-onUnmounted(() => clearInterval(interval));
 </script>
 
 <template>
@@ -78,6 +140,10 @@ onUnmounted(() => clearInterval(interval));
       <div class="w-full max-w-[509px] border-2 border-sky-500 rounded-lg px-8 py-6">
         <p class="text-xs text-gray-500">Давайте создадим Вам аккаунт</p>
         <h1 class="text-2xl font-bold mb-6">Заполните все поля</h1>
+
+        <!-- Сообщения об ошибке/успехе -->
+        <div v-if="errorMessage" class="text-red-600 text-sm mb-2">{{ errorMessage }}</div>
+        <div v-if="successMessage" class="text-green-600 text-sm mb-2">{{ successMessage }}</div>
 
         <form @submit.prevent="onRegister" class="space-y-4">
           <!-- имя -->
@@ -101,13 +167,11 @@ onUnmounted(() => clearInterval(interval));
           <!-- телефон -->
           <div>
             <label class="text-sm text-gray-600">Телефон номер</label>
-            <input
-              v-model="phone"
+            <input v-model="phone"
               @input="onPhoneInput"
               type="tel"
               placeholder="+7 999 123‑45‑67"
               maxlength="18"
-              pattern="^\\+7\\d{10}$"
               required
               class="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
             />
@@ -138,8 +202,9 @@ onUnmounted(() => clearInterval(interval));
           </div>
 
           <button type="submit"
-                  class="w-full bg-green-500 hover:bg-green-600 transition-colors text-white py-3 rounded-full">
-            Зарегистрироваться
+                  class="w-full bg-green-500 hover:bg-green-600 transition-colors text-white py-3 rounded-full"
+                  :disabled="loading">
+            {{ loading ? "Регистрируем..." : "Зарегистрироваться" }}
           </button>
         </form>
 
@@ -168,4 +233,3 @@ onUnmounted(() => clearInterval(interval));
     </div>
   </div>
 </template>
-

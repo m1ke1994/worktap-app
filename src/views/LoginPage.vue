@@ -1,60 +1,79 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../store/userStore";
+
+const router = useRouter();
+const userStore = useUserStore();
 
 const email = ref("");
 const password = ref("");
-const remember = ref(false);
+const errorMessage = ref("");
+const loading = ref(false);
 
-function onLogin() {
-  console.log("Login", {
-    email: email.value,
-    password: password.value,
-    remember: remember.value,
-  });
-}
-
-function onGoogleLogin() {
-  console.log("Google login");
-}
-
-function onForgot() {
-  console.log("Forgot password");
-}
-
-// Тексты и индикаторы
+// Карусель для правой части
 const slides = [
   "Worktap — ваш надёжный путь к быстрым и качественным фриланс-услугам.",
   "Тысячи проверенных специалистов готовы взяться за ваш проект прямо сейчас.",
-  "Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!",
+  "Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!"
 ];
-
 const currentIndex = ref(0);
-
-// Автоматическое переключение слайдов
 let interval = null;
-
 onMounted(() => {
   interval = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % slides.length;
-  }, 5000); // каждые 5 секунд
+  }, 5000);
 });
+onUnmounted(() => clearInterval(interval));
 
-onUnmounted(() => {
-  clearInterval(interval);
-});
+async function onLogin() {
+  errorMessage.value = "";
+  loading.value = true;
+  try {
+    // 1. Получаем токены
+    const resp = await fetch("http://localhost:8000/api/accounts/token/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: email.value, password: password.value }),
+    });
+    const data = await resp.json();
+
+    if (resp.ok && data.access) {
+      localStorage.setItem("access", data.access);
+      localStorage.setItem("refresh", data.refresh);
+
+      // 2. Грузим профиль пользователя и сохраняем в Pinia
+      await userStore.fetchProfile();
+
+      // 3. Переход в профиль
+      router.push("/profile");
+    } else {
+      errorMessage.value = data.detail || "Неверный логин или пароль!";
+    }
+  } catch {
+    errorMessage.value = "Ошибка соединения с сервером!";
+  } finally {
+    loading.value = false;
+  }
+}
+
+function onGoogleLogin() {
+  alert("Google авторизация пока не реализована!");
+}
 </script>
 
 <template>
   <div class="flex min-h-screen">
     <!-- Левая часть: форма входа -->
-    <div class="login-box w-1/2 flex items-center justify-center p-10">
-      <div class="form-wrapper w-full max-w-md space-y-6">
+    <div class="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
+      <div class="w-full max-w-md space-y-6">
         <div>
           <h1 class="text-3xl font-bold">Добро пожаловать!</h1>
           <h2 class="mt-2 text-lg text-gray-700">Войдите в свой аккаунт</h2>
         </div>
         <form @submit.prevent="onLogin" class="space-y-4">
-          <label class="block text-gray-600">
+          <div v-if="errorMessage" class="text-red-600 text-sm mb-2">{{ errorMessage }}</div>
+          <label class="block text-gray-600 font-medium">
             E-mail
             <input
               v-model="email"
@@ -62,9 +81,10 @@ onUnmounted(() => {
               placeholder="E-mail"
               required
               class="mt-1 w-full px-3 py-2 border border-gray-300 rounded"
+              autocomplete="username"
             />
           </label>
-          <label class="block text-gray-600">
+          <label class="block text-gray-600 font-medium">
             Пароль
             <input
               v-model="password"
@@ -72,16 +92,12 @@ onUnmounted(() => {
               placeholder="Пароль"
               required
               class="mt-1 w-full px-3 py-2 border border-gray-300 rounded"
+              autocomplete="current-password"
             />
           </label>
-          <div class="options flex items-center justify-between">
-            <label class="flex items-center text-gray-600">
-              <input v-model="remember" type="checkbox" class="mr-2" />
-              Запомнить меня
-            </label>
+          <div class="flex items-center justify-between">
             <router-link
               to="/password-reset"
-              type="button"
               class="text-sm text-orange-500 hover:underline"
             >
               Забыли пароль?
@@ -89,44 +105,36 @@ onUnmounted(() => {
           </div>
           <button
             type="submit"
-            class="btn-primary w-full py-3 rounded-full bg-green-500 text-white text-center"
+            :disabled="loading"
+            class="w-full py-3 rounded-full bg-green-500 text-white font-bold hover:bg-green-600 transition"
           >
-            Войти
+            <span v-if="loading">Входим...</span>
+            <span v-else>Войти</span>
           </button>
         </form>
         <button
           @click="onGoogleLogin"
-          class="btn-google w-full py-3 rounded-full bg-gray-800 text-white flex items-center justify-center"
+          type="button"
+          class="w-full py-3 rounded-full bg-gray-800 text-white flex items-center justify-center mt-2"
         >
-          <img
-            src="/assets/google-icon.svg"
-            alt="Google"
-            class="w-5 h-5 mr-2"
-          />
+          <img src="/assets/google-icon.svg" alt="Google" class="w-5 h-5 mr-2" />
           Или войдите с помощью Google
         </button>
         <p class="text-center text-gray-600">
-          У вас все еще нет аккаунта?
+          У вас всё ещё нет аккаунта?
           <router-link to="/register" class="text-orange-500 hover:underline transition-all duration-300"
-            >Зарегистрируйтесь бесплатно!</router-link
-          >
+            >Зарегистрируйтесь бесплатно!</router-link>
         </p>
       </div>
     </div>
 
-    <!-- Правая часть: изображение с оверлеем -->
-    <div
-      class="image-box w-1/2 relative bg-cover bg-center"
-      :style="{ backgroundImage: `url('/assets/bg-login1.png')` }"
-    >
-      <div
-        class="overlay absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4"
-      >
-        <img src="/assets/bg-login1.png" alt="" class="hidden" />
-        <p class="text-gray-800 text-sm transition-all duration-300">
+    <!-- Правая часть: изображение с текстовой каруселью -->
+    <div class="w-1/2 hidden md:block relative bg-cover bg-center" :style="{ backgroundImage: `url('/assets/bg-login1.png')` }">
+      <div class="absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4 shadow-lg">
+        <p class="text-gray-800 text-base transition-all duration-300 min-h-[44px]">
           {{ slides[currentIndex] }}
         </p>
-        <div class="dots flex justify-center mt-3">
+        <div class="flex justify-center mt-3">
           <span
             v-for="(slide, index) in slides"
             :key="index"
