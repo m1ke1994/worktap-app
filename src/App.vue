@@ -7,6 +7,7 @@ import HowItWorksModal from "./components/ModalWindow/HowItWorksModal.vue";
 import RulesModal from "./components/ModalWindow/RulesModal.vue";
 import { onMounted } from "vue";
 import AOS from "aos";
+import MyWorks from "./components/MyWorks.vue";
 const route = useRoute();
 
 const isModalRules=ref(false);
@@ -68,7 +69,7 @@ const showLayout = computed(() => {
     >
       <RulesModal v-if="isModalRules" @close="closeModalRules" />
     </Transition>
-
+    
     <Footer
       :openModalRules="openModalRules"
       :openModal="openModal"
