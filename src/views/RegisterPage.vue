@@ -137,7 +137,25 @@ async function onRegister() {
   <div class="flex min-h-screen">
     <!-- Левая половина: форма -->
     <div class="w-1/2 flex items-center justify-center p-10">
-      <div class="w-full max-w-[509px] border-2 border-sky-500 rounded-lg px-8 py-6">
+      <div class="w-full max-w-[509px] border-2 border-sky-500 rounded-lg px-8 py-6 space-y-4">
+  <!-- Кнопка Назад -->
+  <router-link
+    to="/"
+    class="flex items-center text-gray-600 hover:text-green-600 transition"
+  >
+    <svg
+      class="w-5 h-5 mr-1"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+    Назад
+  </router-link>
+
         <p class="text-xs text-gray-500">Давайте создадим Вам аккаунт</p>
         <h1 class="text-2xl font-bold mb-6">Заполните все поля</h1>
 

@@ -65,6 +65,7 @@ const works = [
   }
 ]
 
+
 function formatPrice(price, currency) {
   if (currency === 'RUB') {
     return price.toLocaleString('ru-RU') + ' ₽'
@@ -81,13 +82,14 @@ function formatPrice(price, currency) {
       <div
         class="bg-[#D7FFEC] rounded-2xl shadow-lg flex flex-col items-center justify-center min-h-[250px] cursor-pointer hover:shadow-2xl transition-all duration-300"
       >
-        <img
+        <router-link to="/create-work">
+          <img
           src="/assets/plus_works.svg"
           alt="Добавить ворк"
           class="w-16 h-16 mb-2 hover:translate-y-[-5px] transition-all duration-300 cursor-pointer min-h-[250px]"
         />
-        <!-- Можно добавить подпись, если нужно: -->
-        <!-- <div class="mt-2 font-medium text-lg text-[#00C26D]">Добавить ворк</div> -->
+        </router-link>
+        
       </div>
       <!-- Основные карточки -->
       <div
@@ -106,6 +108,15 @@ function formatPrice(price, currency) {
           {{ formatPrice(work.price, work.currency) }}
         </div>
       </div>
+    </div>
+    <div>
+         <!-- Кнопка "Загрузить ещё" по центру -->
+    <div class="mt-10 flex justify-center">
+      <button
+        class="font-semibold text-[#1DBF73] border border-[#1DBF73] rounded-lg px-6 py-2 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base">
+        Загрузить ещё
+      </button>
+    </div>
     </div>
   </div>
 </template>

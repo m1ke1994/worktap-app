@@ -11,14 +11,15 @@ const password = ref("");
 const errorMessage = ref("");
 const loading = ref(false);
 
-// Карусель для правой части
+// Слайдер-карусель текста
 const slides = [
   "Worktap — ваш надёжный путь к быстрым и качественным фриланс-услугам.",
   "Тысячи проверенных специалистов готовы взяться за ваш проект прямо сейчас.",
-  "Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!"
+  "Получите результат быстрее: опишите задачу, выберите исполнителя — и всё готово!",
 ];
 const currentIndex = ref(0);
 let interval = null;
+
 onMounted(() => {
   interval = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % slides.length;
@@ -26,11 +27,15 @@ onMounted(() => {
 });
 onUnmounted(() => clearInterval(interval));
 
+// Назад
+function goBack() {
+  router.back();
+}
+
 async function onLogin() {
   errorMessage.value = "";
   loading.value = true;
   try {
-    // 1. Получаем токены
     const resp = await fetch("http://localhost:8000/api/accounts/token/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -42,10 +47,8 @@ async function onLogin() {
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
 
-      // 2. Грузим профиль пользователя и сохраняем в Pinia
       await userStore.fetchProfile();
 
-      // 3. Переход в профиль
       router.push("/profile");
     } else {
       errorMessage.value = data.detail || "Неверный логин или пароль!";
@@ -64,15 +67,43 @@ function onGoogleLogin() {
 
 <template>
   <div class="flex min-h-screen">
-    <!-- Левая часть: форма входа -->
+    <!-- Левая часть -->
     <div class="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
       <div class="w-full max-w-md space-y-6">
+        <!-- Кнопка Назад -->
+        <router-link
+          to="/"
+          class="flex items-center text-gray-600 hover:text-green-600 transition mb-2"
+        >
+          <svg
+            class="w-5 h-5 mr-1"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Назад
+        </router-link>
+
+        <!-- Заголовок -->
         <div>
           <h1 class="text-3xl font-bold">Добро пожаловать!</h1>
           <h2 class="mt-2 text-lg text-gray-700">Войдите в свой аккаунт</h2>
         </div>
+
+        <!-- Форма входа -->
         <form @submit.prevent="onLogin" class="space-y-4">
-          <div v-if="errorMessage" class="text-red-600 text-sm mb-2">{{ errorMessage }}</div>
+          <div v-if="errorMessage" class="text-red-600 text-sm mb-2">
+            {{ errorMessage }}
+          </div>
+
           <label class="block text-gray-600 font-medium">
             E-mail
             <input
@@ -84,6 +115,7 @@ function onGoogleLogin() {
               autocomplete="username"
             />
           </label>
+
           <label class="block text-gray-600 font-medium">
             Пароль
             <input
@@ -95,6 +127,7 @@ function onGoogleLogin() {
               autocomplete="current-password"
             />
           </label>
+
           <div class="flex items-center justify-between">
             <router-link
               to="/password-reset"
@@ -103,6 +136,7 @@ function onGoogleLogin() {
               Забыли пароль?
             </router-link>
           </div>
+
           <button
             type="submit"
             :disabled="loading"
@@ -112,26 +146,45 @@ function onGoogleLogin() {
             <span v-else>Войти</span>
           </button>
         </form>
+
+        <!-- Google-кнопка -->
         <button
           @click="onGoogleLogin"
           type="button"
           class="w-full py-3 rounded-full bg-gray-800 text-white flex items-center justify-center mt-2"
         >
-          <img src="/assets/google-icon.svg" alt="Google" class="w-5 h-5 mr-2" />
+          <img
+            src="/assets/google-icon.svg"
+            alt="Google"
+            class="w-5 h-5 mr-2"
+          />
           Или войдите с помощью Google
         </button>
+
+        <!-- Регистрация -->
         <p class="text-center text-gray-600">
           У вас всё ещё нет аккаунта?
-          <router-link to="/register" class="text-orange-500 hover:underline transition-all duration-300"
-            >Зарегистрируйтесь бесплатно!</router-link>
+          <router-link
+            to="/register"
+            class="text-orange-500 hover:underline transition-all duration-300"
+          >
+            Зарегистрируйтесь бесплатно!
+          </router-link>
         </p>
       </div>
     </div>
 
-    <!-- Правая часть: изображение с текстовой каруселью -->
-    <div class="w-1/2 hidden md:block relative bg-cover bg-center" :style="{ backgroundImage: `url('/assets/bg-login1.png')` }">
-      <div class="absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4 shadow-lg">
-        <p class="text-gray-800 text-base transition-all duration-300 min-h-[44px]">
+    <!-- Правая часть с фоном -->
+    <div
+      class="w-1/2 hidden md:block relative bg-cover bg-center"
+      :style="{ backgroundImage: `url('/assets/bg-login1.png')` }"
+    >
+      <div
+        class="absolute bottom-10 left-10 right-10 bg-white bg-opacity-90 rounded-lg p-4 shadow-lg"
+      >
+        <p
+          class="text-gray-800 text-base transition-all duration-300 min-h-[44px]"
+        >
           {{ slides[currentIndex] }}
         </p>
         <div class="flex justify-center mt-3">

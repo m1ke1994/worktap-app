@@ -8,7 +8,6 @@ import CurrentWorks from '../components/CurrentWorks.vue';
 import TopFreelancers from '../components/TopFreelancers.vue';
 import HelpBisness from  '../components/HelpBisness.vue';
 import QuickSearch from '../components/QuickSearch.vue';
-import MyWorks from '../components/MyWorks.vue';
 
 // 1. Реактивное состояние
 const isQuickSearchOpen = ref(false);
@@ -47,17 +46,8 @@ const toggleQuickSearch = () => {
       class="currentWorks mt-10 container mx-auto"
       aria-labelledby="works-heading"
     >
-<!--       <h2 id="works-heading" class="sr-only">
-        Текущие работы и фрилансеры
-      </h2> -->
-   <article
-        data-aos="fade-up"
-        data-aos-duration="800"
-        data-aos-delay="100"
-        aria-label="Текущие заказы"
-      >
-        <MyWorks />
-      </article>
+
+
       <article
         data-aos="fade-up"
         data-aos-duration="800"
