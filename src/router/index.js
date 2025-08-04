@@ -8,6 +8,9 @@ import AllWorks from '../views/AllWorks.vue'
 import ProfileUsersDashbord from '../views/ProfileUsersDashbord/ProfileUsersDashbord.vue'
 import CreateWork from '../components/CreateWork.vue'
 import CreateWorkStep2 from '../components/CreateWorkStep2.vue'
+import CreateWorkStep3 from '../components/CreateWorkStep3.vue'
+import CreateWorkStep4 from '../components/CreateWorkStep4.vue'
+import CreateWorks from '../components/CreateWorks.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
@@ -17,8 +20,11 @@ const routes = [
    { path: '/register',name: 'RegisterPage', component: RegisterPage },
    { path: '/all-works', name: 'AllWorks', component:AllWorks},
   { path: '/profile', name: 'ProfileUsersDashbord', component:ProfileUsersDashbord},
-  { path: '/create-work', name: 'CreateWork', component:CreateWork},
+  { path: '/create-work-1', name: 'CreateWork', component:CreateWork},
    { path: '/create-work-step-2', name: 'CreateWorkStep2', component:CreateWorkStep2},
+    { path: '/create-work-step-3', name: 'CreateWorkStep3', component:CreateWorkStep3},
+    { path: '/create-work-step-4', name: 'CreateWorkStep4', component:CreateWorkStep4},
+    { path: '/create-work', name: 'CreateWorks', component:CreateWorks},
 ]
 
 
