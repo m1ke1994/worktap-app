@@ -27,10 +27,13 @@ export const useUserStore = defineStore('user', {
           localStorage.removeItem('access')
           localStorage.removeItem('refresh')
         }
-      } catch {
+      } catch (e) {
         this.user = null
+        localStorage.removeItem('access')
+        localStorage.removeItem('refresh')
+      } finally {
+        this.loading = false
       }
-      this.loading = false
     },
     setUser(user) {
       this.user = user

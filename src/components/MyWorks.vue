@@ -1,76 +1,87 @@
 <script setup>
+import { useUserStore } from "@/store/userStore";
+import { useRouter } from "vue-router";
+const userStore = useUserStore();
+const router = useRouter();
+
+function onPlusClick() {
+  if (userStore.user) {
+    router.push("/create-work");
+  } else {
+    router.push("/login");
+  }
+}
 const works = [
   {
-    "title": "Дизайн сайта",
-    "description": "Дизайн сайта для компании по производству мебели",
-    "image": "/assets/category/design_site.jpg",
-    "price": 5000,
-    "currency": "RUB"
+    title: "Дизайн сайта",
+    description: "Дизайн сайта для компании по производству мебели",
+    image: "/assets/category/design_site.jpg",
+    price: 5000,
+    currency: "RUB",
   },
   {
-    "title": "Разработка логотипа",
-    "description": "Логотип для кофейни",
-    "image": "/assets/category/logo.jpg",
-    "price": 2500,
-    "currency": "RUB"
+    title: "Разработка логотипа",
+    description: "Логотип для кофейни",
+    image: "/assets/category/logo.jpg",
+    price: 2500,
+    currency: "RUB",
   },
   {
-    "title": "Вёрстка лендинга",
-    "description": "Лендинг для агентства недвижимости",
-    "image": "/assets/category/verstka.jpg",
-    "price": 6000,
-    "currency": "RUB"
+    title: "Вёрстка лендинга",
+    description: "Лендинг для агентства недвижимости",
+    image: "/assets/category/verstka.jpg",
+    price: 6000,
+    currency: "RUB",
   },
   {
-    "title": "Баннер для соцсетей",
-    "description": "Яркий баннер для Instagram",
-    "image": "/assets/category/banner.jpg",
-    "price": 1200,
-    "currency": "RUB"
+    title: "Баннер для соцсетей",
+    description: "Яркий баннер для Instagram",
+    image: "/assets/category/banner.jpg",
+    price: 1200,
+    currency: "RUB",
   },
   {
-    "title": "UX/UI прототип",
-    "description": "Прототип мобильного приложения",
-    "image": "/assets/category/prototype.jpg",
-    "price": 4000,
-    "currency": "RUB"
+    title: "UX/UI прототип",
+    description: "Прототип мобильного приложения",
+    image: "/assets/category/prototype.jpg",
+    price: 4000,
+    currency: "RUB",
   },
   {
-    "title": "Редизайн сайта",
-    "description": "Обновление корпоративного сайта",
-    "image": "/assets/category/redesign.jpg",
-    "price": 7000,
-    "currency": "RUB"
+    title: "Редизайн сайта",
+    description: "Обновление корпоративного сайта",
+    image: "/assets/category/redesign.jpg",
+    price: 7000,
+    currency: "RUB",
   },
   {
-    "title": "Интернет-магазин",
-    "description": "Полная разработка интернет-магазина",
-    "image": "/assets/category/shop.jpg",
-    "price": 12000,
-    "currency": "RUB"
+    title: "Интернет-магазин",
+    description: "Полная разработка интернет-магазина",
+    image: "/assets/category/shop.jpg",
+    price: 12000,
+    currency: "RUB",
   },
   {
-    "title": "Анимация",
-    "description": "Короткая анимация для рекламы",
-    "image": "/assets/category/animation.jpg",
-    "price": 3500,
-    "currency": "RUB"
+    title: "Анимация",
+    description: "Короткая анимация для рекламы",
+    image: "/assets/category/animation.jpg",
+    price: 3500,
+    currency: "RUB",
   },
   {
-    "title": "Landing Page",
-    "description": "Разработка одностраничного сайта под ключ",
-    "image": "/assets/category/landing_full.jpg",
-    "price": 8000,
-    "currency": "RUB"
-  }
-]
-
+    title: "Landing Page",
+    description: "Разработка одностраничного сайта под ключ",
+    image: "/assets/category/landing_full.jpg",
+    price: 8000,
+    currency: "RUB",
+  },
+];
 
 function formatPrice(price, currency) {
-  if (currency === 'RUB') {
-    return price.toLocaleString('ru-RU') + ' ₽'
+  if (currency === "RUB") {
+    return price.toLocaleString("ru-RU") + " ₽";
   }
-  return price + ' ' + currency
+  return price + " " + currency;
 }
 </script>
 
@@ -80,16 +91,14 @@ function formatPrice(price, currency) {
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <!-- Плюсовая карточка -->
       <div
+        @click="onPlusClick"
         class="bg-[#D7FFEC] rounded-2xl shadow-lg flex flex-col items-center justify-center min-h-[250px] cursor-pointer hover:shadow-2xl transition-all duration-300"
       >
-        <router-link to="/create-work">
-          <img
+        <img
           src="/assets/plus_works.svg"
           alt="Добавить ворк"
-          class="w-16 h-16 mb-2 hover:translate-y-[-5px] transition-all duration-300 cursor-pointer min-h-[250px]"
+          class="w-16 h-16 mb-2 hover:translate-y-[-5px] transition-all duration-300 cursor-pointer"
         />
-        </router-link>
-        
       </div>
       <!-- Основные карточки -->
       <div
@@ -110,13 +119,14 @@ function formatPrice(price, currency) {
       </div>
     </div>
     <div>
-         <!-- Кнопка "Загрузить ещё" по центру -->
-    <div class="mt-10 flex justify-center">
-      <button
-        class="font-semibold text-[#1DBF73] border border-[#1DBF73] rounded-lg px-6 py-2 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base">
-        Загрузить ещё
-      </button>
-    </div>
+      <!-- Кнопка "Загрузить ещё" по центру -->
+      <div class="mt-10 flex justify-center">
+        <button
+          class="font-semibold text-[#1DBF73] border border-[#1DBF73] rounded-lg px-6 py-2 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base"
+        >
+          Загрузить ещё
+        </button>
+      </div>
     </div>
   </div>
 </template>

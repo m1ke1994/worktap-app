@@ -28,9 +28,6 @@ onMounted(() => {
 onUnmounted(() => clearInterval(interval));
 
 // Назад
-function goBack() {
-  router.back();
-}
 
 async function onLogin() {
   errorMessage.value = "";
