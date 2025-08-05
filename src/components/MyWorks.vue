@@ -1,8 +1,15 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "vue-router";
+import CardWork from "@/components/CardWork.vue";
+
 const userStore = useUserStore();
 const router = useRouter();
+
+const myWorks = ref([]);
+const showModal = ref(false);
+const selectedWorkId = ref(null);
 
 function onPlusClick() {
   if (userStore.user) {
@@ -11,120 +18,87 @@ function onPlusClick() {
     router.push("/login");
   }
 }
-const works = [
-  {
-    title: "Дизайн сайта",
-    description: "Дизайн сайта для компании по производству мебели",
-    image: "/assets/category/design_site.jpg",
-    price: 5000,
-    currency: "RUB",
-  },
-  {
-    title: "Разработка логотипа",
-    description: "Логотип для кофейни",
-    image: "/assets/category/logo.jpg",
-    price: 2500,
-    currency: "RUB",
-  },
-  {
-    title: "Вёрстка лендинга",
-    description: "Лендинг для агентства недвижимости",
-    image: "/assets/category/verstka.jpg",
-    price: 6000,
-    currency: "RUB",
-  },
-  {
-    title: "Баннер для соцсетей",
-    description: "Яркий баннер для Instagram",
-    image: "/assets/category/banner.jpg",
-    price: 1200,
-    currency: "RUB",
-  },
-  {
-    title: "UX/UI прототип",
-    description: "Прототип мобильного приложения",
-    image: "/assets/category/prototype.jpg",
-    price: 4000,
-    currency: "RUB",
-  },
-  {
-    title: "Редизайн сайта",
-    description: "Обновление корпоративного сайта",
-    image: "/assets/category/redesign.jpg",
-    price: 7000,
-    currency: "RUB",
-  },
-  {
-    title: "Интернет-магазин",
-    description: "Полная разработка интернет-магазина",
-    image: "/assets/category/shop.jpg",
-    price: 12000,
-    currency: "RUB",
-  },
-  {
-    title: "Анимация",
-    description: "Короткая анимация для рекламы",
-    image: "/assets/category/animation.jpg",
-    price: 3500,
-    currency: "RUB",
-  },
-  {
-    title: "Landing Page",
-    description: "Разработка одностраничного сайта под ключ",
-    image: "/assets/category/landing_full.jpg",
-    price: 8000,
-    currency: "RUB",
-  },
-];
-
-function formatPrice(price, currency) {
-  if (currency === "RUB") {
-    return price.toLocaleString("ru-RU") + " ₽";
-  }
-  return price + " " + currency;
+function openDetails(workId) {
+  selectedWorkId.value = workId;
+  showModal.value = true;
 }
+function closeDetails() {
+  showModal.value = false;
+  selectedWorkId.value = null;
+}
+
+function formatPrice(price) {
+  return price ? price.toLocaleString("ru-RU") + " ₽" : "";
+}
+
+onMounted(async () => {
+  const token = localStorage.getItem("access");
+  if (!token) return;
+  const res = await fetch("http://localhost:8000/api/works/my/", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (res.ok) {
+    myWorks.value = await res.json();
+  }
+});
 </script>
 
 <template>
   <div class="container mx-auto px-4 py-8">
+    <CardWork
+      v-if="showModal"
+      :work-id="selectedWorkId"
+      :open="showModal"
+      @close="closeDetails"
+    />
     <h2 class="font-bold text-3xl text-left mb-6">Мои ворки</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
       <!-- Плюсовая карточка -->
       <div
         @click="onPlusClick"
-        class="bg-[#D7FFEC] rounded-2xl shadow-lg flex flex-col items-center justify-center min-h-[250px] cursor-pointer hover:shadow-2xl transition-all duration-300"
+        class="bg-gradient-to-tr from-[#d7ffec] to-[#b7f8e4] rounded-2xl shadow-lg flex flex-col items-center justify-center min-h-[210px] cursor-pointer hover:shadow-2xl transition-all duration-300 group"
       >
         <img
           src="/assets/plus_works.svg"
           alt="Добавить ворк"
-          class="w-16 h-16 mb-2 hover:translate-y-[-5px] transition-all duration-300 cursor-pointer"
+          class="w-16 h-16 mb-2 transition-transform duration-300 group-hover:scale-110"
         />
+        <span class="text-[#1DBF73] font-semibold mt-2 text-lg">Создать новый ворк</span>
       </div>
-      <!-- Основные карточки -->
+      <!-- Ворки пользователя -->
       <div
-        v-for="(work, idx) in works"
-        :key="idx"
-        class="bg-white rounded-2xl shadow-lg p-4 flex flex-col hover:shadow-2xl hover:translate-y-[-5px] transition-all duration-300 cursor-pointer min-h-[250px]"
+        v-for="work in myWorks"
+        :key="work.id"
+        class="bg-white rounded-2xl shadow-lg flex flex-col p-6 hover:shadow-2xl transition-all duration-300 min-h-[210px] group"
       >
-        <img
-          :src="work.image"
-          :alt="work.title"
-          class="h-44 w-full object-cover rounded-xl mb-4"
-        />
-        <h3 class="text-xl font-semibold mb-2">{{ work.title }}</h3>
-        <p class="text-gray-600 mb-4">{{ work.description }}</p>
-        <div class="mt-auto text-right font-bold text-lg">
-          {{ formatPrice(work.price, work.currency) }}
+        <h3 class="text-xl font-semibold mb-1 line-clamp-2">{{ work.title }}</h3>
+        <div class="mb-1 flex gap-2 text-sm text-gray-500">
+          <span class="font-semibold">{{ work.category }}</span>
+          <span v-if="work.subcategory">/ {{ work.subcategory }}</span>
+        </div>
+        <div class="mb-4 text-sm text-gray-400">
+          Срок: <span class="font-medium text-gray-600">{{ work.deadline }}</span> дней
+        </div>
+        <div class="mt-auto flex items-end justify-between">
+          <span class="font-bold text-[#1DBF73] text-lg">{{ formatPrice(work.price) }}</span>
+          <button
+            @click="openDetails(work.id)"
+            class="px-3 py-1 rounded-full text-xs font-semibold bg-[#f7faff] text-[#6555BE] hover:bg-[#ede8fc] transition"
+          >Подробнее</button>
         </div>
       </div>
-    </div>
-    <div>
-      <!-- Кнопка "Загрузить ещё" по центру -->
-      <div class="mt-10 flex justify-center">
+      <!-- Если нет ворков -->
+      <div
+        v-if="myWorks.length === 0"
+        class="col-span-full flex flex-col items-center justify-center py-16 opacity-60"
+      >
+        <img src="/assets/no-photo--lg.png" class="w-24 mb-6" alt="Пусто" />
+        <div class="text-gray-400 text-xl mb-2">У вас пока нет опубликованных ворков</div>
         <button
-          class="font-semibold text-[#1DBF73] border border-[#1DBF73] rounded-lg px-6 py-2 hover:bg-[#1DBF73] hover:text-white transition-all duration-300 text-sm md:text-base"
+          @click="onPlusClick"
+          class="mt-2 px-8 py-2 bg-[#1DBF73] text-white rounded-full font-semibold hover:bg-[#159f5e] transition"
         >
-          Загрузить ещё
+          Создать ворк
         </button>
       </div>
     </div>
@@ -132,5 +106,10 @@ function formatPrice(price, currency) {
 </template>
 
 <style scoped>
-/* если нужен кастомный стиль для плюсовой карточки — сюда */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 </style>
