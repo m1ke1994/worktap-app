@@ -63,7 +63,7 @@ const isAuth = computed(() => !!userStore.user)
               <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1DBF73] transition-all duration-300 group-hover:w-full"></span>
             </li>
             <li class="group relative">
-              <router-link to="#" class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Создать ворк</router-link>
+              <router-link to="/create-work" class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Создать ворк</router-link>
               <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1DBF73] transition-all duration-300 group-hover:w-full"></span>
             </li>
             <li class="group relative">
