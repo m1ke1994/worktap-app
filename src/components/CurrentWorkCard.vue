@@ -26,11 +26,11 @@ function closeModal() {
 function formatStatus(status) {
   switch (status) {
     case "pending":
-      return { text: "В ожидании", color: "#28A745" }; // жёлтый
+      return { text: "В ожидании", color: "#22c55e" }; 
     case "in_progress":
-      return { text: "В работе", color: "#17A2B8" }; // синий
+      return { text: "В работе", color: "#3b82f6" }; 
     case "completed":
-      return { text: "Завершён", color: "eb432c" }; // зелёный
+      return { text: "Завершён", color: "#ef4444" };
     default:
       return { text: "Неизвестно", color: "#6c757d" };
   }

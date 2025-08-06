@@ -2,14 +2,21 @@
 import { ref, onMounted } from "vue";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "vue-router";
-import CardWork from "@/components/CardWork.vue";
+import CardWork from "@/components/CardWork.vue"; // МОДАЛКА!!!
 
 const userStore = useUserStore();
 const router = useRouter();
 
 const myWorks = ref([]);
 const showModal = ref(false);
-const selectedWorkId = ref(null);
+const selectedWork = ref(null);
+
+function onCompleted(id) {
+  // Обновить статус в основном списке
+  myWorks.value = myWorks.value.map(w =>
+    w.id === id ? { ...w, status: "completed" } : w
+  );
+}
 
 function onPlusClick() {
   if (userStore.user) {
@@ -18,13 +25,15 @@ function onPlusClick() {
     router.push("/login");
   }
 }
-function openDetails(workId) {
-  selectedWorkId.value = workId;
+
+function openDetails(work) {
+  selectedWork.value = work;      // Сохраняем сам ворк!
   showModal.value = true;
 }
+
 function closeDetails() {
   showModal.value = false;
-  selectedWorkId.value = null;
+  selectedWork.value = null;
 }
 
 function formatPrice(price) {
@@ -45,12 +54,15 @@ onMounted(async () => {
 
 <template>
   <div class="container mx-auto px-4 py-8">
+
+    <!-- CardWork как модалка -->
     <CardWork
-      v-if="showModal"
-      :work-id="selectedWorkId"
-      :open="showModal"
+      v-if="showModal && selectedWork"
+      :work="selectedWork"
       @close="closeDetails"
+      @completed="onCompleted"
     />
+
     <h2 class="font-bold text-3xl text-left mb-6">Мои ворки</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
       <!-- Плюсовая карточка -->
@@ -65,6 +77,7 @@ onMounted(async () => {
         />
         <span class="text-[#1DBF73] font-semibold mt-2 text-lg">Создать новый ворк</span>
       </div>
+
       <!-- Ворки пользователя -->
       <div
         v-for="work in myWorks"
@@ -76,17 +89,39 @@ onMounted(async () => {
           <span class="font-semibold">{{ work.category }}</span>
           <span v-if="work.subcategory">/ {{ work.subcategory }}</span>
         </div>
-        <div class="mb-4 text-sm text-gray-400">
-          Срок: <span class="font-medium text-gray-600">{{ work.deadline }}</span> дней
+        <div class="mb-2 text-sm text-gray-400">
+          Статус:
+         <span
+  :class="{
+    'text-blue-500': work.status === 'in_progress',
+    'text-red-500': work.status === 'completed',      // БЫЛО green, СТАЛО red!
+    'text-green-500': work.status === 'pending'
+  }"
+  class="font-semibold capitalize"
+>
+  {{
+    work.status === 'in_progress'
+      ? 'В работе'
+      : work.status === 'completed'
+      ? 'Завершён'
+      : 'В ожидании'
+  }}
+</span>
+        </div>
+        <div class="text-sm text-gray-400 mb-4">
+          Срок: <span class="text-gray-600 font-medium">{{ work.deadline }}</span> дней
         </div>
         <div class="mt-auto flex items-end justify-between">
           <span class="font-bold text-[#1DBF73] text-lg">{{ formatPrice(work.price) }}</span>
           <button
-            @click="openDetails(work.id)"
+            @click="openDetails(work)"
             class="px-3 py-1 rounded-full text-xs font-semibold bg-[#f7faff] text-[#6555BE] hover:bg-[#ede8fc] transition"
-          >Подробнее</button>
+          >
+            Подробнее
+          </button>
         </div>
       </div>
+
       <!-- Если нет ворков -->
       <div
         v-if="myWorks.length === 0"
