@@ -235,15 +235,7 @@ async function publish() {
               </div>
             </div>
           </div>
-          <div>
-            <label class="block text-gray-500 mb-1 font-semibold">Теги</label>
-            <div class="flex flex-wrap gap-2">
-              <span v-for="(tag, idx) in tags" :key="idx" class="flex items-center bg-[#f7f6fc] border border-[#ded4f5] rounded-2xl px-4 py-1 text-[#6a6e8d] text-sm">
-                {{ tag }}
-                <button @click="removeTag(idx)" class="ml-2 text-[#6a6e8d] hover:text-red-500 font-bold text-xl leading-none focus:outline-none">&times;</button>
-              </span>
-            </div>
-          </div>
+          
         </template>
         <!-- Шаг 2: Описание -->
         <template v-if="currentStep === 2">
