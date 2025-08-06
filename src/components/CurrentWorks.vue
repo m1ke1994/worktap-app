@@ -10,15 +10,14 @@ onMounted(async () => {
   loading.value = true
   error.value = ''
   try {
-    // Можно добавить ?limit=10, если DRF поддерживает пагинацию (или срез ниже)
     const res = await fetch('http://localhost:8000/api/works/')
     if (!res.ok) throw new Error('Ошибка загрузки работ')
     let data = await res.json()
     if (Array.isArray(data)) {
-      works.value = data.slice(0, 10)
+      // Фильтруем только pending!
+      works.value = data.filter(w => w.status === 'pending').slice(0, 10)
     } else if (data.results) {
-      // Если пагинация от DRF (results, count, etc)
-      works.value = data.results
+      works.value = data.results.filter(w => w.status === 'pending')
     } else {
       works.value = []
     }
@@ -50,7 +49,7 @@ function getAvatarProps(work) {
   <div class="container mx-auto px-4 py-8">
     <h2 class="font-bold text-3xl text-left mb-6">Актуальные ворки</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Карточки с данными -->
+      <!-- Только ворки со статусом pending -->
       <CurrentWorkCard
         v-for="work in works"
         :key="work.id"
@@ -73,7 +72,7 @@ function getAvatarProps(work) {
     <div v-if="loading" class="text-center text-gray-500 py-10">Загрузка...</div>
     <div v-if="error" class="text-center text-red-500 py-6">{{ error }}</div>
     <div v-if="!loading && works.length === 0" class="text-center text-gray-400 py-10">
-      Нет опубликованных ворков
+      Нет опубликованных ворков в ожидании
     </div>
   </div>
 </template>
