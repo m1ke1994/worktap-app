@@ -26,9 +26,9 @@ function closeModal() {
 function formatStatus(status) {
   switch (status) {
     case "pending":
-      return { text: "В ожидании", color: "#22c55e" }; 
+      return { text: "В ожидании", color: "#22c55e" };
     case "in_progress":
-      return { text: "В работе", color: "#3b82f6" }; 
+      return { text: "В работе", color: "#3b82f6" };
     case "completed":
       return { text: "Завершён", color: "#ef4444" };
     default:
@@ -43,11 +43,21 @@ function formatStatus(status) {
   >
     <div class="flex gap-4 items-center mb-4">
       <div
-        class="w-11 h-11 rounded-full flex items-center justify-center text-lg font-bold shadow"
+        class="w-11 h-11 rounded-full flex items-center justify-center text-lg font-bold shadow overflow-hidden"
         :style="{ background: avatar.color }"
       >
-        {{ avatar.initials }}
+        <template v-if="work.owner_avatar">
+          <img
+            :src="work.owner_avatar"
+            alt="Аватар пользователя"
+            class="w-full h-full object-cover"
+          />
+        </template>
+        <template v-else>
+          {{ avatar.initials }}
+        </template>
       </div>
+
       <div>
         <div class="text-[#6555BE] font-medium">
           {{ work.owner_first_name }} {{ work.owner_last_name }}
@@ -57,7 +67,8 @@ function formatStatus(status) {
           class="text-xs font-semibold"
           :style="{ color: formatStatus(work.status).color }"
         >
-        <span class="text-gray-400">Статус:</span> {{ formatStatus(work.status).text }}
+          <span class="text-gray-400">Статус:</span>
+          {{ formatStatus(work.status).text }}
         </div>
       </div>
     </div>
@@ -103,11 +114,21 @@ function formatStatus(status) {
             class="md:w-1/3 flex flex-col items-center justify-center bg-gradient-to-tr from-[#f7faff] to-[#e9e6fb] py-10 px-6 md:rounded-l-2xl border-r border-[#ede8fc] min-w-[230px]"
           >
             <div
-              class="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mb-4 shadow"
+              class="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mb-4 shadow overflow-hidden"
               :style="{ background: avatar.color }"
             >
-              {{ avatar.initials }}
+              <template v-if="work.owner_avatar">
+                <img
+                  :src="work.owner_avatar"
+                  alt="Аватар пользователя"
+                  class="w-full h-full object-cover"
+                />
+              </template>
+              <template v-else>
+                {{ avatar.initials }}
+              </template>
             </div>
+
             <div class="text-center mb-1 font-bold text-[#6555BE] text-lg">
               {{ work.owner_first_name }} {{ work.owner_last_name }}
             </div>
@@ -121,7 +142,8 @@ function formatStatus(status) {
               class="text-xs font-semibold mb-1"
               :style="{ color: formatStatus(work.status).color }"
             >
-              <span class="text-gray-400">Статус:</span> {{ formatStatus(work.status).text }}
+              <span class="text-gray-400">Статус:</span>
+              {{ formatStatus(work.status).text }}
             </div>
 
             <div class="text-gray-400 text-xs mb-1">
