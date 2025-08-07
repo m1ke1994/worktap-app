@@ -30,7 +30,7 @@ onMounted(async () => {
             <img
               :src="freelancer.avatar ? freelancer.avatar : '/assets/profile.jpg'"
               alt="Фото фрилансера"
-              class="w-full h-full object-cover rounded-lg"
+              class="w-full h-full object-cover rounded-full"
             />
             <img
               class="absolute -top-0 -right-0 w-4 h-4"

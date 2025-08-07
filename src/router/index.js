@@ -7,6 +7,7 @@ import RegisterPage from '../views/RegisterPage.vue'
 import AllWorks from '../views/AllWorks.vue'
 import ProfileUsersDashbord from '../views/ProfileUsersDashbord/ProfileUsersDashbord.vue'
 import CreateWorks from '../components/CreateWorks.vue'
+import CreateJob from '../components/CreateJob.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
@@ -21,6 +22,12 @@ const routes = [
     name: 'CreateWorks',
     component: CreateWorks,
     meta: { requiresAuth: true }   // --- < добавил защиту!
+  },
+  {
+    path: '/create-job',
+    name: 'CreateJob',
+    component: CreateJob,
+    
   },
 ]
 

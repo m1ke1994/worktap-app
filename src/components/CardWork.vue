@@ -50,6 +50,24 @@ async function completeWork() {
     emit("close");
   }
 }
+// ... остальной setup-код
+
+function getDaysLeft(work) {
+  if (!work?.created_at || !work?.deadline) return "";
+  const created = new Date(work.created_at);
+  const deadlineDate = new Date(created);
+  deadlineDate.setDate(deadlineDate.getDate() + Number(work.deadline));
+  const now = new Date();
+  const diff = Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24));
+  if (diff > 0) {
+    return `Осталось: ${diff} дн.`;
+  } else if (diff === 0) {
+    return "Сегодня последний день";
+  } else {
+    return `Просрочено на ${Math.abs(diff)} дн.`;
+  }
+}
+
 </script>
 
 <template>
@@ -97,13 +115,19 @@ async function completeWork() {
           <div class="text-[#1DBF73] font-bold text-2xl mb-1">
             {{ formatPrice(props.work.price) }}
           </div>
-          <div class="text-gray-400 text-xs mb-1">
-            Срок:
-            <span class="text-gray-700 font-semibold">{{
-              props.work.deadline
-            }}</span>
-            дн.
-          </div>
+ <div class="text-gray-400 text-xs mb-1">
+  Срок:
+  <span class="text-gray-700 font-semibold">{{ props.work.deadline }}</span> дн.
+  <span
+    v-if="getDaysLeft(props.work)"
+    class="ml-2 font-bold"
+    :class="getDaysLeft(props.work).includes('Просрочено') ? 'text-[#EB5757]' : 'text-[#1DBF73]'"
+  >
+    {{ getDaysLeft(props.work) }}
+  </span>
+</div>
+
+
           <div class="text-gray-400 text-xs mb-6">
             Создан: {{ formatDate(props.work.created_at) }}
           </div>
@@ -165,11 +189,7 @@ async function completeWork() {
             >
               {{ isLoading ? "Завершаем..." : "Завершить" }}
             </button>
-            <button
-              class="px-7 py-2 bg-white border text-[#1DBF73] border-[#1DBF73] rounded-full font-semibold hover:bg-[#f4fff9] transition"
-            >
-              Написать
-            </button>
+           
           </div>
         </div>
       </div>

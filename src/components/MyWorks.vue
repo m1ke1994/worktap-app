@@ -63,7 +63,7 @@ onMounted(async () => {
       @completed="onCompleted"
     />
 
-    <h2 class="font-bold text-3xl text-left mb-6">Мои ворки</h2>
+    <h2 class="font-bold text-3xl text-left mb-6">Мои задания</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
       <!-- Плюсовая карточка -->
       <div

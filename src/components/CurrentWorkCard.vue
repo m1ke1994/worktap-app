@@ -35,6 +35,22 @@ function formatStatus(status) {
       return { text: "Неизвестно", color: "#6c757d" };
   }
 }
+function getDaysLeft(work) {
+  if (!work?.created_at || !work?.deadline) return "";
+  const created = new Date(work.created_at);
+  const deadlineDate = new Date(created);
+  deadlineDate.setDate(deadlineDate.getDate() + Number(work.deadline));
+  const now = new Date();
+  const diff = Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24));
+  if (diff > 0) {
+    return `Осталось: ${diff} дн.`;
+  } else if (diff === 0) {
+    return "Сегодня последний день";
+  } else {
+    return `Просрочено на ${Math.abs(diff)} дн.`;
+  }
+}
+
 </script>
 
 <template>
@@ -146,13 +162,20 @@ function formatStatus(status) {
               {{ formatStatus(work.status).text }}
             </div>
 
-            <div class="text-gray-400 text-xs mb-1">
-              Срок:
-              <span class="text-gray-700 font-semibold">{{
-                work.deadline
-              }}</span>
-              дн.
-            </div>
+ <div class="text-gray-400 text-xs mb-1">
+  Срок:
+  <span class="text-gray-700 font-semibold">{{ work.deadline }}</span>
+  дн.
+  <span
+    v-if="getDaysLeft(work)"
+    :class="getDaysLeft(work).includes('Просрочено') ? 'text-red-500 font-bold' : 'text-[#1DBF73] font-bold'"
+    class="ml-2"
+  >
+    {{ getDaysLeft(work) }}
+  </span>
+</div>
+
+
             <div class="text-gray-400 text-xs mb-6">
               Создан: {{ formatDate(work.created_at) }}
             </div>
