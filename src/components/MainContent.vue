@@ -1,202 +1,218 @@
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
-function handleQuickSearch() {
-  router.push('/search')
+const query = ref('')
+const hovered = ref(false)
+
+function goSearch() {
+  router.push(query.value ? { path: '/search', query: { q: query.value } } : '/search')
 }
+
+function goCreate() {
+  router.push('/create-work')
+}
+
+// Небольшая анимация параллакса для карточек справа
+const tilt = ref({ x: 0, y: 0 })
+function onMouseMove(e) {
+  const { innerWidth: w, innerHeight: h } = window
+  const x = ((e.clientX / w) - 0.5) * 10
+  const y = ((e.clientY / h) - 0.5) * 10
+  tilt.value = { x, y }
+}
+
+onMounted(() => window.addEventListener('mousemove', onMouseMove))
+onBeforeUnmount(() => window.removeEventListener('mousemove', onMouseMove))
 </script>
 
 <template>
-  <section class="relative overflow-hidden min-h-[640px] flex items-center py-14 md:py-24">
-    <!-- Фон на весь экран, object-position — чтобы “голова” ноутбука не срезалась -->
-    <img
-      src="/public/assets/banner_2.jpg"
-      alt=""
-      class="fixed md:absolute top-0 left-0 w-full h-full object-cover object-top md:object-center opacity-30 pointer-events-none select-none z-0"
-      style="min-height: 640px; max-height: 900px;"
-    />
-    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center z-10 relative">
-      <!-- Левая часть -->
-      <div class="w-full md:w-1/2 space-y-8 animate-fadein-up relative z-20">
-        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900">
-          <span class="inline-block">Приложение для</span>
-          <span class="text-[#1DBF73] block mt-1">поиска фрилансеров и заказчиков</span>
+  <section class="relative overflow-hidden">
+    <!-- Фон: мягкий градиент + анимированные блобы -->
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute -top-40 -left-24 h-96 w-96 rounded-full blur-3xl bg-gradient-to-br from-emerald-400 via-teal-400 to-sky-400 opacity-30 animate-pulse"></div>
+      <div class="absolute -bottom-48 -right-24 h-[28rem] w-[28rem] rounded-full blur-3xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-pink-500 opacity-25 animate-[pulse_6s_ease-in-out_infinite]"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(30rem_20rem_at_20%_10%,rgba(255,255,255,.6),transparent),radial-gradient(30rem_20rem_at_80%_90%,rgba(255,255,255,.5),transparent)]"></div>
+      <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,.2),transparent_20%,transparent_80%,rgba(255,255,255,.15))]"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
+      <!-- Левая колонка -->
+      <div class="space-y-7">
+        <div class="inline-flex items-center gap-2 text-xs md:text-sm font-medium rounded-full bg-white/70 backdrop-blur px-3 py-1 shadow-sm border border-black/5">
+          <span class="i-lucide-stars" />
+          Твой маркетплейс услуг · без комиссий
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] text-gray-900">
+          Найди <span class="text-emerald-600">исполнителя</span> или опубликуй 
+          <span class="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">заказ</span> за минуты
         </h1>
-        <p class="text-lg md:text-xl text-gray-600 max-w-md">
-          Найдите специалиста для своей задачи за пару минут — безопасно, удобно, прозрачно. Без скрытых комиссий!
+
+        <p class="text-lg md:text-xl text-gray-600 max-w-xl">
+          Поиск фрилансеров и заказчиков с прозрачным процессом и быстрым стартом. Без внутренней валюты, гарантий и удержаний — всё честно и напрямую.
         </p>
-        <div class="mt-8">
-          <button @click="handleQuickSearch"
-            class="relative px-10 py-4 rounded-2xl font-semibold text-lg bg-[#1DBF73] text-white shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 focus:ring-2 focus:ring-[#1DBF73]">
-            <span class="inline-flex items-center gap-2">
-              Быстрый поиск
-              <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" /></svg>
-            </span>
+
+        <!-- Поисковая строка -->
+        <div class="relative group max-w-2xl">
+          <div class="flex items-center gap-2 bg-white/80 backdrop-blur rounded-2xl border border-black/10 shadow-md focus-within:ring-2 focus-within:ring-emerald-400 px-3 py-2">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+            <input v-model="query" @keyup.enter="goSearch" type="text" placeholder="Например: дизайн логотипа, верстка, парсинг" class="w-full bg-transparent outline-none text-base md:text-lg py-2" />
+            <button @click="goSearch" class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-white bg-emerald-600 hover:bg-emerald-700 active:scale-[.98] transition">
+              Искать
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-3 text-sm">
+            <button class="px-3 py-1 rounded-full bg-white/70 border border-black/10 hover:bg-white" @click="query='Vue 3'; goSearch()">Vue 3</button>
+            <button class="px-3 py-1 rounded-full bg-white/70 border border-black/10 hover:bg-white" @click="query='Django REST'; goSearch()">Django REST</button>
+            <button class="px-3 py-1 rounded-full bg-white/70 border border-black/10 hover:bg-white" @click="query='Парсинг'; goSearch()">Парсинг</button>
+            <button class="px-3 py-1 rounded-full bg-white/70 border border-black/10 hover:bg-white" @click="query='UI/UX'; goSearch()">UI/UX</button>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="flex flex-wrap gap-3">
+          <button @click="goCreate" class="px-5 py-3 rounded-xl font-semibold text-white bg-gray-900 hover:bg-black shadow-lg shadow-emerald-500/10">
+            Создать кворк
+          </button>
+          <button @mouseenter="hovered = true" @mouseleave="hovered = false" class="px-5 py-3 rounded-xl font-semibold bg-white/70 backdrop-blur border border-black/10 hover:bg-white">
+            Как это работает?
           </button>
         </div>
+
+        <!-- Цифры доверия -->
+        <div class="grid grid-cols-3 gap-4 pt-2 max-w-xl">
+          <div class="rounded-2xl bg-white/70 backdrop-blur border border-black/10 p-4 text-center">
+            <div class="text-2xl md:text-3xl font-extrabold">3k+</div>
+            <div class="text-xs md:text-sm text-gray-500">исполнителей</div>
+          </div>
+          <div class="rounded-2xl bg-white/70 backdrop-blur border border-black/10 p-4 text-center">
+            <div class="text-2xl md:text-3xl font-extrabold">1.2k</div>
+            <div class="text-xs md:text-sm text-gray-500">активных заказов</div>
+          </div>
+          <div class="rounded-2xl bg-white/70 backdrop-blur border border-black/10 p-4 text-center">
+            <div class="text-2xl md:text-3xl font-extrabold">4.9★</div>
+            <div class="text-xs md:text-sm text-gray-500">средняя оценка</div>
+          </div>
+        </div>
       </div>
-    <!-- Правая часть: ноутбук, аватары, письма, линии -->
-<div class="w-full md:w-1/2 flex justify-center mt-12 md:mt-0 relative min-h-[350px] z-20">
-  <div class="relative" style="width: 420px; height: 320px; overflow:visible;">
-    <!-- Фоновые прямые линии -->
-    <svg class="absolute top-0 left-0 w-full h-full z-10 pointer-events-none" width="420" height="320">
-      <line x1="70" y1="40" x2="350" y2="40" stroke="#1DBF73" stroke-opacity="0.06" stroke-width="3" />
-      <line x1="70" y1="160" x2="350" y2="160" stroke="#1DBF73" stroke-opacity="0.07" stroke-width="3" />
-      <line x1="70" y1="280" x2="350" y2="280" stroke="#1DBF73" stroke-opacity="0.06" stroke-width="3" />
-    </svg>
 
-    <!-- Заказчики (слева) -->
-    <img src="/public/assets/avatar1.jpg"
-         class="absolute" style="top:10px; left:10px; width:54px; height:54px; border-radius:50%; box-shadow:0 0 0 3px #fff;" alt="Заказчик 1" />
-    <img src="/public/assets/avatar2.jpg"
-         class="absolute" style="top:133px; left:10px; width:54px; height:54px; border-radius:50%; box-shadow:0 0 0 3px #fff;" alt="Заказчик 2" />
-    <img src="/public/assets/avatar3.jpg"
-         class="absolute" style="top:256px; left:10px; width:54px; height:54px; border-radius:50%; box-shadow:0 0 0 3px #fff;" alt="Заказчик 3" />
+      <!-- Правая колонка: стек карточек с лёгким 3D -->
+      <div class="relative h-[520px] md:h-[560px]">
+        <div
+          class="absolute inset-0 [perspective:1000px]"
+          :style="{ '--rx': `${tilt.y}deg`, '--ry': `${-tilt.x}deg` }"
+        >
+          <!-- Карточка 1 -->
+          <div class="card-tilt absolute left-4 right-12 top-6 rotate-[-2deg]">
+            <CardGig title="Дизайн логотипа" price="от 5 000 ₽" tag="Дизайн" avatarColor="bg-emerald-500" />
+          </div>
+          <!-- Карточка 2 -->
+          <div class="card-tilt absolute left-10 right-6 top-40 rotate-[1.5deg]">
+            <CardGig title="Верстка лендинга" price="от 12 000 ₽" tag="Frontend" avatarColor="bg-blue-500" />
+          </div>
+          <!-- Карточка 3 -->
+          <div class="card-tilt absolute left-20 right-20 top-72 rotate-[-1deg]">
+            <CardGig title="Django REST API" price="от 15 000 ₽" tag="Backend" avatarColor="bg-violet-500" />
+          </div>
 
-    <!-- Фрилансеры (справа) -->
-    <img src="/public/assets/avatar4.jpg"
-         class="absolute" style="top:10px; left:356px; width:54px; height:54px; border-radius:50%; box-shadow:0 0 0 3px #fff;" alt="Фрилансер 1" />
-    <img src="/public/assets/avatar5.jpg"
-         class="absolute" style="top:133px; left:356px; width:54px; height:54px; border-radius:50%; box-shadow:0 0 0 3px #fff;" alt="Фрилансер 2" />
-    <img src="/public/assets/avatar6.jpg"
-         class="absolute" style="top:256px; left:356px; width:54px; height:54px; border-radius:50%; box-shadow:0 0 0 3px #fff;" alt="Фрилансер 3" />
-
-    <!-- Письма (6 шт, разные траектории, разное направление) -->
-    <!-- 1 -> 4 (диагональ вверх) -->
-    <img src="/public/assets/email.svg" class="absolute mail-chaos-1 z-30" alt="Письмо" />
-    <!-- 2 -> 5 (прямая средняя) -->
-    <img src="/public/assets/email.svg" class="absolute mail-chaos-2 z-30" alt="Письмо" />
-    <!-- 3 -> 6 (диагональ вниз) -->
-    <img src="/public/assets/email.svg" class="absolute mail-chaos-3 z-30" alt="Письмо" />
-    <!-- 1 -> 6 (через центр, кривая) -->
-    <img src="/public/assets/email.svg" class="absolute mail-chaos-4 z-30" alt="Письмо" />
-    <!-- 4 -> 2 (дуга справа налево) -->
-    <img src="/public/assets/email.svg" class="absolute mail-chaos-5 z-30" alt="Письмо" />
-    <!-- 5 -> 3 (дуга сверху вниз) -->
-    <img src="/public/assets/email.svg" class="absolute mail-chaos-6 z-30" alt="Письмо" />
-  </div>
-</div>
-
+          <!-- Линии-сетки для глубины -->
+          <svg class="absolute -z-10 left-0 top-0 w-full h-full opacity-30" viewBox="0 0 600 600" fill="none">
+            <defs>
+              <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                <path d="M 32 0 L 0 0 0 32" fill="none" stroke="currentColor" stroke-width="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        </div>
+      </div>
     </div>
+
+    <!-- Бегущая строка категорий -->
+    <div class="relative mt-4 py-4 border-t border-white/40 bg-white/40 backdrop-blur">
+      <div class="animate-marquee whitespace-nowrap text-sm md:text-base font-medium text-gray-700/90">
+        <span class="mx-6">Дизайн</span>
+        <span class="mx-6">Frontend</span>
+        <span class="mx-6">Backend</span>
+        <span class="mx-6">Парсинг</span>
+        <span class="mx-6">SEO</span>
+        <span class="mx-6">SMM</span>
+        <span class="mx-6">QA</span>
+        <span class="mx-6">DevOps</span>
+        <span class="mx-6">Аналитика</span>
+        <span class="mx-6">Копирайтинг</span>
+      </div>
+    </div>
+
+    <!-- Подсказка при ховере по «Как это работает?» -->
+    <transition name="fade">
+      <div v-if="hovered" class="pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div class="rounded-2xl bg-gray-900 text-white px-4 py-3 text-sm shadow-2xl">
+          Публикуешь задачу → получаешь отклики → выбираешь исполнителя. Оплата напрямую, без комиссии.
+        </div>
+      </div>
+    </transition>
   </section>
 </template>
 
+<script>
+// Локальный компонент карточки кворка
+export default {
+  components: {
+    CardGig: {
+      props: {
+        title: String,
+        price: String,
+        tag: String,
+        avatarColor: String,
+      },
+      template: `
+        <div class="group rounded-2xl bg-white/80 backdrop-blur border border-black/10 shadow-xl hover:shadow-2xl transition p-4 md:p-5">
+          <div class="flex items-center gap-3">
+            <div :class="['h-10 w-10 rounded-full text-white grid place-items-center font-bold', avatarColor]">★</div>
+            <div class="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">{{ tag }}</div>
+          </div>
+          <div class="mt-3 font-semibold text-gray-900">{{ title }}</div>
+          <div class="text-sm text-gray-500">{{ price }}</div>
+          <div class="mt-3 flex items-center justify-between">
+            <div class="flex -space-x-2">
+              <span class="h-7 w-7 rounded-full bg-emerald-200 border border-white"></span>
+              <span class="h-7 w-7 rounded-full bg-blue-200 border border-white"></span>
+              <span class="h-7 w-7 rounded-full bg-violet-200 border border-white"></span>
+            </div>
+            <button class="text-sm px-3 py-1.5 rounded-lg bg-gray-900 text-white group-hover:bg-black transition">Отклики</button>
+          </div>
+        </div>
+      `,
+    },
+  },
+}
+</script>
+
 <style scoped>
-.mail-chaos-1 {
-  width:36px;height:36px;left:70px;top:40px; /* старт 1 */
-  animation: mail-chaos-anim-1 3.2s cubic-bezier(.8,.1,.2,1.1) infinite;
-}
-@keyframes mail-chaos-anim-1 {
-  0%   { left:70px; top:40px; opacity:1; }
-  50%  { left:210px; top:90px; opacity:1; }
-  100% { left:350px; top:40px; opacity:1; }
+/* Маркировка для 3D-наклона карточек */
+.card-tilt {
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .2s ease-out;
 }
 
-.mail-chaos-2 {
-  width:36px;height:36px;left:70px;top:160px; /* старт 2 */
-  animation: mail-chaos-anim-2 3.4s cubic-bezier(.7,.1,.3,1.1) infinite .7s;
+/* Простейшая бегущая строка */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-@keyframes mail-chaos-anim-2 {
-  0%   { left:70px; top:160px; opacity:1; }
-  60%  { left:210px; top:160px; opacity:1; }
-  100% { left:350px; top:160px; opacity:1; }
-}
-
-.mail-chaos-3 {
-  width:36px;height:36px;left:70px;top:280px; /* старт 3 */
-  animation: mail-chaos-anim-3 3.6s cubic-bezier(.75,.2,.4,1.1) infinite 1.4s;
-}
-@keyframes mail-chaos-anim-3 {
-  0%   { left:70px; top:280px; opacity:1; }
-  40%  { left:210px; top:220px; opacity:1; }
-  100% { left:350px; top:280px; opacity:1; }
+.animate-marquee {
+  display: inline-block;
+  min-width: 200%;
+  padding-left: 100%;
+  animation: marquee 18s linear infinite;
 }
 
-/* Диагональная траектория через центр */
-.mail-chaos-4 {
-  width:36px;height:36px;left:70px;top:40px;
-  animation: mail-chaos-anim-4 4.2s cubic-bezier(.6,.3,.4,1.1) infinite 2.1s;
-}
-@keyframes mail-chaos-anim-4 {
-  0%   { left:70px; top:40px; opacity:1; }
-  40%  { left:210px; top:160px; opacity:1; }
-  70%  { left:270px; top:230px; opacity:1; }
-  100% { left:350px; top:280px; opacity:1; }
-}
-
-/* Справа налево дугой (фрилансер1->заказчик2) */
-.mail-chaos-5 {
-  width:36px;height:36px;left:350px;top:40px;
-  animation: mail-chaos-anim-5 3.7s cubic-bezier(.6,.2,.3,1) infinite 1.1s;
-}
-@keyframes mail-chaos-anim-5 {
-  0%   { left:350px; top:40px; opacity:1;}
-  45%  { left:210px; top:110px; opacity:1;}
-  90%  { left:70px;  top:160px; opacity:1;}
-  100% { left:70px;  top:160px; opacity:1;}
-}
-
-/* Фрилансер2 вниз к заказчику3 */
-.mail-chaos-6 {
-  width:36px;height:36px;left:350px;top:160px;
-  animation: mail-chaos-anim-6 3.9s cubic-bezier(.6,.2,.3,1) infinite 2.3s;
-}
-@keyframes mail-chaos-anim-6 {
-  0%   { left:350px; top:160px; opacity:1;}
-  30%  { left:310px; top:220px; opacity:1;}
-  90%  { left:70px;  top:280px; opacity:1;}
-  100% { left:70px;  top:280px; opacity:1;}
-}
-
-/* ====== Fade-in ====== */
-@keyframes fadein-up {
-  0% { opacity: 0; transform: translateY(48px);}
-  100% { opacity: 1; transform: translateY(0);}
-}
-.animate-fadein-up {
-  animation: fadein-up 1s cubic-bezier(.22,1,.36,1) both;
-}
-
-/* ======= АНИМАЦИЯ ПИСЕМ ======= */
-/* Письмо 1: заказчик 1 -> фрилансер 1 (верхняя линия) */
-.mail-anim-1 {
-  width: 36px;
-  height: 36px;
-  position: absolute;
-  left: 70px; top: 40px;
-  animation: mail-anim-path-1 2.6s cubic-bezier(0.83,0,0.17,1) infinite;
-}
-@keyframes mail-anim-path-1 {
-  0% { left: 70px; top: 40px; opacity: 1;}
-  50% { left: 210px; top: 40px; opacity: 1; transform: scale(1.12); filter: drop-shadow(0 0 10px #1DBF73cc);}
-  100% { left: 350px; top: 40px; opacity: 1;}
-}
-
-/* Письмо 2: заказчик 2 -> фрилансер 2 (средняя линия) */
-.mail-anim-2 {
-  width: 36px;
-  height: 36px;
-  position: absolute;
-  left: 70px; top: 160px;
-  animation: mail-anim-path-2 2.9s cubic-bezier(0.83,0,0.17,1) infinite;
-}
-@keyframes mail-anim-path-2 {
-  0% { left: 70px; top: 160px; opacity: 1;}
-  55% { left: 210px; top: 160px; opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 8px #1DBF73b0);}
-  100% { left: 350px; top: 160px; opacity: 1;}
-}
-
-/* Письмо 3: заказчик 3 -> фрилансер 3 (нижняя линия) */
-.mail-anim-3 {
-  width: 36px;
-  height: 36px;
-  position: absolute;
-  left: 70px; top: 280px;
-  animation: mail-anim-path-3 3.3s cubic-bezier(0.83,0,0.17,1) infinite;
-}
-@keyframes mail-anim-path-3 {
-  0% { left: 70px; top: 280px; opacity: 1;}
-  60% { left: 210px; top: 280px; opacity: 1; transform: scale(1.1);}
-  100% { left: 350px; top: 280px; opacity: 1;}
-}
+/* Тонкое появление тултипа */
+.fade-enter-active, .fade-leave-active { transition: opacity .2s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>
