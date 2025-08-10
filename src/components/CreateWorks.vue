@@ -5,73 +5,48 @@ const router = useRouter()
 
 // ---------- Категории ----------
 const categories = [
-  { name: 'Ремонт и строительство', sub: [
-      'Сантехнические работы', 'Электромонтажные работы', 'Малярные и штукатурные работы', 'Сборка мебели', 'Отделочные работы', 'Установка дверей и замков', 'Демонтаж', 'Строительство домов'
-    ] },
-  { name: 'Грузоперевозки', sub: [
-      'Квартирный переезд', 'Офисный переезд', 'Услуги грузчиков', 'Междугородние перевозки'
-    ] },
-  { name: 'Курьерские услуги', sub: [
-      'Доставка документов', 'Экспресс-доставка', 'Курьер на день', 'Доставка еды'
-    ] },
-  { name: 'Уборка и помощь по хозяйству', sub: [
-      'Генеральная уборка', 'Уборка после ремонта', 'Мытьё окон', 'Помощь по дому', 'Уход за животными'
-    ] },
-  { name: 'Ремонт цифровой техники', sub: [
-      'Ремонт компьютеров', 'Ремонт телефонов', 'Ремонт бытовой техники'
-    ] },
-  { name: 'Дизайн', sub: [
-      'Веб-дизайн', 'Логотипы', 'Баннеры', 'Дизайн презентаций', 'UI/UX'
-    ] },
-  { name: 'Разработка', sub: [
-      'Сайты', 'Мобильные приложения', 'Боты', 'CRM', 'API', 'Парсеры'
-    ] },
-  { name: 'Фото, видео, аудио', sub: [
-      'Фотосъёмка', 'Видеомонтаж', 'Звукорежиссура', 'Дикторские услуги'
-    ] },
-  { name: 'Тексты и переводы', sub: [
-      'Копирайтинг', 'Редактура', 'Рерайт', 'Переводы', 'Написание резюме'
-    ] },
-  { name: 'Красота и здоровье', sub: [
-      'Массаж', 'Парикмахерские услуги', 'Маникюр и педикюр', 'Косметология'
-    ] },
-  { name: 'Репетиторы и обучение', sub: [
-      'Английский язык', 'Математика', 'Музыка', 'Спорт', 'Школьные предметы'
-    ] },
-  { name: 'Мероприятия и праздники', sub: [
-      'Организация мероприятий', 'Ведущий', 'Музыканты', 'Аниматоры', 'Декор'
-    ] }
+  { name: 'Ремонт и строительство', sub: ['Сантехнические работы','Электромонтажные работы','Малярные и штукатурные работы','Сборка мебели','Отделочные работы','Установка дверей и замков','Демонтаж','Строительство домов'] },
+  { name: 'Грузоперевозки', sub: ['Квартирный переезд','Офисный переезд','Услуги грузчиков','Междугородние перевозки'] },
+  { name: 'Курьерские услуги', sub: ['Доставка документов','Экспресс-доставка','Курьер на день','Доставка еды'] },
+  { name: 'Уборка и помощь по хозяйству', sub: ['Генеральная уборка','Уборка после ремонта','Мытьё окон','Помощь по дому','Уход за животными'] },
+  { name: 'Ремонт цифровой техники', sub: ['Ремонт компьютеров','Ремонт телефонов','Ремонт бытовой техники'] },
+  { name: 'Дизайн', sub: ['Веб-дизайн','Логотипы','Баннеры','Дизайн презентаций','UI/UX'] },
+  { name: 'Разработка', sub: ['Сайты','Мобильные приложения','Боты','CRM','API','Парсеры'] },
+  { name: 'Фото, видео, аудио', sub: ['Фотосъёмка','Видеомонтаж','Звукорежиссура','Дикторские услуги'] },
+  { name: 'Тексты и переводы', sub: ['Копирайтинг','Редактура','Рерайт','Переводы','Написание резюме'] },
+  { name: 'Красота и здоровье', sub: ['Массаж','Парикмахерские услуги','Маникюр и педикюр','Косметология'] },
+  { name: 'Репетиторы и обучение', sub: ['Английский язык','Математика','Музыка','Спорт','Школьные предметы'] },
+  { name: 'Мероприятия и праздники', sub: ['Организация мероприятий','Ведущий','Музыканты','Аниматоры','Декор'] }
 ]
 
-// ---------- Состояния формы ----------
+// ---------- Шаги ----------
 const steps = [
-  { label: 'Основные' },
+  { label: 'Основное' },
   { label: 'Описание' },
-  { label: 'Галерея' },
+  { label: 'Материалы' },
   { label: 'Публикация' }
 ]
 const currentStep = ref(1)
 const prevDirection = ref('forward')
 
-// Основное
+// ---------- Состояние формы ----------
 const selectedCategory = ref('')
 const selectedSubcategory = ref('')
 const workTitle = ref('')
-const tags = ref([])
+const tags = ref([])            // массив тегов
+const tagInput = ref('')        // текущее значение ввода тегов
 
-// Описание
 const description = ref('')
-const requirements = ref('')
+const requirements = ref('')    // требования к исполнителю
 const deadline = ref(3)
 const minPrice = 500
 const maxPrice = 100000
 const price = ref(5000)
 
-// Галерея (фронтовая, не отправляется на сервер пока)
-const images = ref([])
-const files = ref([])
+const images = ref([])          // [{name, src, file}]
+const files = ref([])           // [File]
+const isDragging = ref(false)
 
-// Для ошибок
 const errorMsg = ref('')
 
 // ---------- Вычисления ----------
@@ -82,69 +57,72 @@ const availableSubcategories = computed(() => {
 const categoryHint = computed(() => selectedCategory.value ? '' : 'Сначала выберите категорию')
 const subcategoryHint = computed(() => selectedCategory.value && !selectedSubcategory.value ? 'Теперь выберите подкатегорию' : '')
 const canNext = computed(() => {
-  if (currentStep.value === 1)
-    return selectedCategory.value && selectedSubcategory.value && workTitle.value
-  if (currentStep.value === 2)
-    return description.value && requirements.value && deadline.value && price.value >= minPrice && price.value <= maxPrice
-  if (currentStep.value === 3)
-    return true // необязательные картинки
+  if (currentStep.value === 1) return selectedCategory.value && selectedSubcategory.value && workTitle.value
+  if (currentStep.value === 2) return description.value && requirements.value && deadline.value && price.value >= minPrice && price.value <= maxPrice
   return true
 })
+const progress = computed(() => Math.round((currentStep.value - 1) / (steps.length - 1) * 100))
 
-// ---------- Методы ----------
-function nextStep() {
-  if (currentStep.value < steps.length && canNext.value) {
-    prevDirection.value = 'forward'
-    currentStep.value++
-  }
-}
-function prevStep() {
-  if (currentStep.value > 1) {
-    prevDirection.value = 'back'
-    currentStep.value--
-  }
-}
-function onPriceInput(e) {
+// ---------- Навигация ----------
+function nextStep(){ if (currentStep.value < steps.length && canNext.value) { prevDirection.value='forward'; currentStep.value++ } }
+function prevStep(){ if (currentStep.value > 1) { prevDirection.value='back'; currentStep.value-- } }
+
+// ---------- Поля / хелперы ----------
+function onPriceInput(e){
   let val = parseInt(e.target.value)
   if (isNaN(val)) val = minPrice
   if (val < minPrice) val = minPrice
   if (val > maxPrice) val = maxPrice
   price.value = val
 }
-// Теги
-function removeTag(idx) { tags.value.splice(idx, 1) }
-// Галерея (front only)
-function onImageChange(e) {
-  for (const file of e.target.files) {
+function setBudget(v){ price.value = Math.min(Math.max(v, minPrice), maxPrice) }
+function setDeadline(v){ deadline.value = Math.min(Math.max(v, 1), 30) }
+
+// Теги (по Enter / запятой / Tab)
+function onTagKey(e){
+  if (['Enter', ',', 'Tab'].includes(e.key)) {
+    e.preventDefault()
+    const v = tagInput.value.trim().replace(/,$/, '')
+    if (v && !tags.value.includes(v)) tags.value.push(v)
+    tagInput.value = ''
+  }
+}
+function removeTag(idx){ tags.value.splice(idx, 1) }
+
+// Галерея
+function onImageChange(e){
+  addImages(Array.from(e.target.files || []))
+  e.target.value = null
+}
+function handleDrop(ev){
+  isDragging.value = false
+  addImages(Array.from(ev.dataTransfer?.files || []))
+}
+function addImages(filesList){
+  for (const file of filesList){
     if (!file.type.startsWith('image/')) continue
-    if (images.value.length >= 5) break
+    if (images.value.length >= 6) break
     const reader = new FileReader()
-    reader.onload = event => {
-      images.value.push({ name: file.name, src: event.target.result, file })
-    }
+    reader.onload = ev => images.value.push({ name: file.name, src: ev.target.result, file })
     reader.readAsDataURL(file)
   }
-  e.target.value = null
 }
-function removeImage(idx) { images.value.splice(idx, 1) }
-function onFileChange(e) {
-  for (const file of e.target.files) {
-    if (file.type.startsWith('image/')) continue
-    files.value.push(file)
+function removeImage(idx){ images.value.splice(idx, 1) }
+
+function onFileChange(e){
+  for (const f of e.target.files) {
+    if (f.type.startsWith('image/')) continue
+    files.value.push(f)
   }
   e.target.value = null
 }
-function removeFile(idx) { files.value.splice(idx, 1) }
+function removeFile(idx){ files.value.splice(idx, 1) }
 
-// ---------- ОТПРАВКА ----------
-async function publish() {
+// ---------- Отправка ----------
+async function publish(){
   errorMsg.value = ''
   const token = localStorage.getItem('access')
-  if (!token) {
-    router.push('/login')
-    return
-  }
-  // Собираем данные
+  if (!token) { router.push('/login'); return }
   const data = {
     title: workTitle.value,
     category: selectedCategory.value,
@@ -155,257 +133,340 @@ async function publish() {
     price: price.value,
     tags: tags.value
   }
-  try {
+  try{
     const res = await fetch('http://localhost:8000/api/works/create/', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { 'Content-Type':'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(data),
     })
-    if (res.ok) {
-      router.push('/profile')
-    } else {
+    if (res.ok) router.push('/profile')
+    else {
       const err = await res.json()
-      errorMsg.value = err.detail || 'Ошибка создания кворка'
+      errorMsg.value = err.detail || 'Ошибка создания заказа'
     }
-  } catch (e) {
+  }catch{
     errorMsg.value = 'Ошибка соединения с сервером'
   }
+}
+
+// ---------- Утилиты ----------
+function fmtPrice(v){
+  return typeof v === 'number'
+    ? v.toLocaleString('ru-RU', { style:'currency', currency:'RUB', maximumFractionDigits:0 })
+    : '—'
 }
 </script>
 
 <template>
-  <div class="bg-[#f7faff] min-h-screen flex flex-col items-center py-10">
-    <!-- Stepper -->
-    <div class="w-[933px] bg-white border border-blue-200 rounded-xl p-3 mb-8">
-      <div class="flex justify-between items-center relative">
-        <div class="absolute left-10 right-10 top-1/2 h-1 bg-[#ded4f5] z-0"></div>
-        <div v-for="(step, idx) in steps" :key="idx" class="flex flex-col items-center z-10 w-1/6">
-          <div
-            class="flex items-center justify-center w-10 h-10 rounded-full text-lg font-bold border-4"
-            :class="{
-              'bg-green-500 text-white border-green-300': currentStep === idx+1,
-              'bg-[#c9bbe5] text-white border-[#ded4f5]': currentStep !== idx+1,
-            }"
-          >{{ idx+1 }}</div>
-          <span class="mt-1 text-xs font-medium text-[#6a6e8d] whitespace-nowrap">{{ step.label }}</span>
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-800">
+    <!-- Header -->
+    <header class="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-slate-200/60">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight">
+          Создание <span class="text-emerald-600">задания</span> для исполнителей
+        </h1>
+        <div class="hidden sm:flex items-center gap-3">
+          <div class="h-2 w-44 bg-slate-200/70 rounded-full overflow-hidden">
+            <div class="h-full bg-emerald-500 transition-all duration-500" :style="{ width: progress + '%' }"></div>
+          </div>
+          <span class="text-sm text-slate-500 tabular-nums">{{ progress }}%</span>
         </div>
       </div>
-    </div>
+    </header>
 
-    <Transition :name="prevDirection === 'forward' ? 'slider' : 'slider-back'" mode="out-in" appear>
-      <div :key="currentStep" class="w-[933px] bg-white rounded-xl p-8 shadow border border-gray-100 space-y-6 transition-all duration-300">
-        <!-- Шаг 1: Основные -->
-        <template v-if="currentStep === 1">
-          <div class="grid grid-cols-2 gap-8">
-            <div>
-              <label class="block text-gray-500 mb-1 font-semibold">Название услуги <span class="text-red-500">*</span></label>
-              <input
-                v-model="workTitle"
-                type="text"
-                placeholder="Например: Дизайн сайта для стоматологии"
-                class="w-full border-b border-gray-200 text-lg py-2 bg-transparent focus:outline-none"
-              />
-            </div>
-            <div class="grid grid-cols-2 gap-8">
-              <div>
-                <label class="block text-gray-500 mb-1 font-semibold">Категория <span class="text-red-500">*</span></label>
-                <select
-                  v-model="selectedCategory"
-                  class="w-full border-b border-gray-200 py-2 bg-transparent focus:outline-none text-gray-700"
-                >
-                  <option disabled value="">Выберите категорию</option>
-                  <option v-for="cat in categories" :key="cat.name" :value="cat.name">{{ cat.name }}</option>
-                </select>
-                <div class="text-xs text-gray-400 mt-1">{{ categoryHint }}</div>
+    <!-- Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8 grid lg:grid-cols-[1fr_380px] gap-8">
+      <!-- Form -->
+      <section class="rounded-3xl bg-white/80 ring-1 ring-slate-200 shadow-xl shadow-slate-200/60 overflow-hidden">
+        <!-- Stepper -->
+        <div class="px-6 sm:px-8 pt-6">
+          <div class="flex flex-wrap items-center gap-2">
+            <div v-for="(s,i) in steps" :key="s.label" class="flex items-center gap-2">
+              <div class="px-3 py-1 rounded-full text-xs font-semibold"
+                   :class="i+1<=currentStep ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-500'">
+                {{ i+1 }}. {{ s.label }}
               </div>
-              <div>
-                <label class="block text-gray-500 mb-1 font-semibold">Подкатегория <span class="text-red-500">*</span></label>
-                <select
-                  v-model="selectedSubcategory"
-                  :disabled="!selectedCategory"
-                  class="w-full border-b border-gray-200 py-2 bg-transparent focus:outline-none text-gray-700"
-                >
-                  <option disabled value="">Выберите подкатегорию</option>
-                  <option v-for="sub in availableSubcategories" :key="sub" :value="sub">{{ sub }}</option>
-                </select>
-                <div class="text-xs text-gray-400 mt-1">{{ subcategoryHint }}</div>
-              </div>
+              <div v-if="i!==steps.length-1" class="w-8 h-px bg-slate-200"></div>
             </div>
           </div>
-          
-        </template>
-        <!-- Шаг 2: Описание -->
-        <template v-if="currentStep === 2">
-          <h2 class="font-bold text-2xl mb-6 text-[#473d69]">Описание и условия</h2>
-          <div class="mb-8">
-            <label class="block text-gray-600 mb-1 font-semibold">Описание <span class="text-red-500">*</span></label>
-            <textarea
-              v-model="description"
-              rows="6"
-              placeholder="Опишите, что вы делаете и как работаете"
-              class="w-full border border-gray-200 rounded-xl p-4 text-base bg-[#faf9fc] focus:outline-none focus:border-[#7d6dbe] transition"
-            ></textarea>
-          </div>
-          <div class="mb-8">
-            <label class="block text-gray-600 mb-1 font-semibold">Требования к заказчику <span class="text-red-500">*</span></label>
-            <textarea
-              v-model="requirements"
-              rows="4"
-              placeholder="Что требуется от заказчика для начала работы"
-              class="w-full border border-gray-200 rounded-xl p-4 text-base bg-[#faf9fc] focus:outline-none focus:border-[#7d6dbe] transition"
-            ></textarea>
-          </div>
-          <div class="mb-8">
-            <label class="block text-gray-600 mb-2 font-semibold">Срок выполнения (дней): <span class="text-[#21c274] font-bold">{{ deadline }}</span></label>
-            <input
-              type="range"
-              min="1"
-              max="30"
-              v-model="deadline"
-              class="w-full accent-[#21c274] h-2"
-            />
-            <div class="flex justify-between text-xs text-gray-400 mt-1">
-              <span>1 день</span>
-              <span>30 дней</span>
-            </div>
-          </div>
-          <div>
-            <label class="block text-gray-600 mb-2 font-semibold">Цена (₽): <span class="text-[#21c274] font-bold">{{ price }}</span></label>
-            <div class="flex items-center gap-4">
-              <input
-                type="range"
-                :min="minPrice"
-                :max="maxPrice"
-                v-model="price"
-                class="w-full accent-[#21c274] h-2"
-                step="100"
-              />
-              <input
-                type="number"
-                v-model="price"
-                :min="minPrice"
-                :max="maxPrice"
-                @input="onPriceInput"
-                class="w-28 border border-gray-300 rounded-xl px-3 py-2 text-base"
-              />
-              <span class="text-gray-500 text-sm">₽</span>
-            </div>
-            <div class="flex justify-between text-xs text-gray-400 mt-1">
-              <span>{{ minPrice.toLocaleString() }} ₽</span>
-              <span>{{ maxPrice.toLocaleString() }} ₽</span>
-            </div>
-          </div>
-        </template>
-        <!-- Шаг 3: Галерея -->
-        <template v-if="currentStep === 3">
-          <h2 class="font-bold text-2xl mb-6 text-[#473d69]">Галерея (опционально)</h2>
-          <div class="mb-8">
-            <label class="block text-gray-600 mb-2 font-semibold">Изображения (до 5 шт)</label>
-            <div class="flex flex-wrap gap-4">
-              <label
-                class="w-32 h-32 flex flex-col items-center justify-center border-2 border-dashed border-[#ded4f5] rounded-2xl bg-[#f7faff] text-[#b895fd] text-4xl cursor-pointer hover:bg-[#ede8fc] transition"
-                v-if="images.length < 5"
-              >
-                <span>+</span>
-                <input type="file" accept="image/*" class="hidden" multiple @change="onImageChange" />
-                <span class="text-xs text-gray-400 mt-2">Добавить</span>
-              </label>
-              <div
-                v-for="(img, idx) in images"
-                :key="img.name + idx"
-                class="w-32 h-32 rounded-2xl overflow-hidden border border-[#ded4f5] relative group"
-              >
-                <img :src="img.src" :alt="img.name" class="object-cover w-full h-full" />
-                <button
-                  @click="removeImage(idx)"
-                  class="absolute top-1 right-1 bg-white rounded-full text-red-400 px-2 font-bold opacity-80 group-hover:opacity-100 hover:text-red-600 transition"
-                  title="Удалить"
-                >×</button>
-              </div>
-            </div>
-            <div class="text-xs text-gray-400 mt-2">
-              (Пока не отправляются на сервер, только для примера)
-            </div>
-          </div>
-          <div class="mb-8">
-            <label class="block text-gray-600 mb-2 font-semibold">Файлы (опционально)</label>
-            <div class="flex flex-col gap-3">
-              <div class="flex items-center gap-3" v-for="(file, idx) in files" :key="file.name + idx">
-                <span class="text-[#473d69] font-medium">{{ file.name }}</span>
-                <button @click="removeFile(idx)" class="text-red-400 hover:text-red-600 text-lg" title="Удалить">×</button>
-              </div>
-            </div>
-            <label class="inline-block mt-3 px-5 py-2 bg-[#f6f2fc] text-[#a181ff] rounded-full font-medium hover:bg-[#ede8fc] transition cursor-pointer">
-              + Добавить файл
-              <input type="file" class="hidden" multiple @change="onFileChange" />
-            </label>
-          </div>
-        </template>
-        <!-- Шаг 4: Публикация -->
-        <template v-if="currentStep === 4">
-          <div class="flex flex-col items-center">
-            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="w-24 h-24 mb-6" alt="Готово!" />
-            <h2 class="font-bold text-2xl mb-4 text-[#473d69] text-center">Поздравляем! <br>Вы почти опубликовали заявку 🎉</h2>
-            <p class="text-gray-600 mb-8 text-center max-w-[500px]">
-              Всё готово — проверьте введённые данные. После публикации ваш кворк появится в поиске и станет доступен для заказчиков.
-            </p>
-          </div>
-        </template>
-        <!-- КНОПКИ НАВИГАЦИИ -->
-        <div class="flex justify-between mt-10">
-          <button
-            v-if="currentStep > 1"
-            @click="prevStep"
-            class="px-10 py-3 bg-[#f6f2fc] text-[#b895fd] rounded-full font-semibold hover:bg-[#ede8fc] transition"
-          >Назад</button>
-          <div class="flex-1"></div>
-          <button
-            v-if="currentStep < steps.length"
-            @click="nextStep"
-            :disabled="!canNext"
-            class="px-10 py-3 bg-[#21c274] text-white rounded-full font-semibold hover:bg-[#1ca563] transition"
-          >Дальше</button>
-          <button
-            v-else
-            @click="publish"
-            class="px-10 py-3 bg-[#21c274] text-white rounded-full font-semibold hover:bg-[#1ca563] transition"
-          >Опубликовать</button>
         </div>
-        <div v-if="errorMsg" class="text-red-500 text-center mt-4">{{ errorMsg }}</div>
-      </div>
-    </Transition>
+
+        <Transition :name="prevDirection === 'forward' ? 'slide' : 'slide-back'" mode="out-in" appear>
+          <div :key="currentStep" class="px-6 sm:px-8 py-6 grid gap-6">
+            <!-- STEP 1 -->
+            <template v-if="currentStep === 1">
+              <div class="grid sm:grid-cols-2 gap-6">
+                <div class="sm:col-span-2">
+                  <label class="block text-sm font-semibold text-slate-600 mb-1">
+                    Название заказа <span class="text-rose-500">*</span>
+                  </label>
+                  <input
+                    v-model="workTitle"
+                    type="text"
+                    placeholder="Например: Нужен дизайн сайта для стоматологии"
+                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-slate-600 mb-1">Категория <span class="text-rose-500">*</span></label>
+                  <select
+                    v-model="selectedCategory"
+                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400"
+                  >
+                    <option disabled value="">Выберите категорию</option>
+                    <option v-for="cat in categories" :key="cat.name" :value="cat.name">{{ cat.name }}</option>
+                  </select>
+                  <p class="text-xs text-slate-400 mt-1">{{ categoryHint }}</p>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-slate-600 mb-1">Подкатегория <span class="text-rose-500">*</span></label>
+                  <select
+                    v-model="selectedSubcategory" :disabled="!selectedCategory"
+                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 disabled:opacity-60"
+                  >
+                    <option disabled value="">Выберите подкатегорию</option>
+                    <option v-for="sub in availableSubcategories" :key="sub" :value="sub">{{ sub }}</option>
+                  </select>
+                  <p class="text-xs text-slate-400 mt-1">{{ subcategoryHint }}</p>
+                </div>
+
+                <!-- Tags -->
+                <div class="sm:col-span-2">
+                  <label class="block text-sm font-semibold text-slate-600 mb-1">Теги (по Enter/запятой)</label>
+                  <div class="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2">
+                    <span
+                      v-for="(tag, idx) in tags" :key="tag + idx"
+                      class="inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-medium border border-emerald-200"
+                    >
+                      #{{ tag }}
+                      <button class="text-emerald-600 hover:text-emerald-800" @click="removeTag(idx)" title="Убрать">×</button>
+                    </span>
+                    <input
+                      v-model="tagInput" @keydown="onTagKey" type="text"
+                      placeholder="дизайн, ремонт, перевод..."
+                      class="flex-1 min-w-[140px] py-1 text-sm outline-none bg-transparent"
+                    />
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Теги помогут подходящим исполнителям быстрее найти ваш заказ.</p>
+                </div>
+              </div>
+            </template>
+
+            <!-- STEP 2 -->
+            <template v-else-if="currentStep === 2">
+              <div class="grid gap-6">
+                <div>
+                  <label class="block text-sm font-semibold text-slate-600 mb-1">
+                    Что нужно сделать <span class="text-rose-500">*</span>
+                  </label>
+                  <textarea
+                    v-model="description" rows="6"
+                    placeholder="Цель, объём работ, ожидаемый результат, ссылки/референсы."
+                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-slate-600 mb-1">
+                    Требования к исполнителю <span class="text-rose-500">*</span>
+                  </label>
+                  <textarea
+                    v-model="requirements" rows="4"
+                    placeholder="Опыт, стек/навыки, сроки отклика. Что указать в предложении (срок, цена, примеры работ)."
+                    class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400"
+                  />
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-sm font-semibold text-slate-600">Желаемый срок (дней)</label>
+                      <div class="flex gap-1">
+                        <button @click="setDeadline(3)"  class="text-xs px-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200">3</button>
+                        <button @click="setDeadline(7)"  class="text-xs px-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200">7</button>
+                        <button @click="setDeadline(14)" class="text-xs px-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200">14</button>
+                      </div>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                      <input type="range" min="1" max="30" v-model="deadline" class="w-full accent-emerald-500" />
+                      <div class="flex justify-between text-xs text-slate-400 mt-1">
+                        <span>1</span><span>{{ deadline }} дн.</span><span>30</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-sm font-semibold text-slate-600">Бюджет</label>
+                      <div class="flex gap-1">
+                        <button @click="setBudget(3000)"  class="text-xs px-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200">3 000 ₽</button>
+                        <button @click="setBudget(10000)" class="text-xs px-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200">10 000 ₽</button>
+                        <button @click="setBudget(30000)" class="text-xs px-2 py-1 rounded-full bg-slate-100 hover:bg-slate-200">30 000 ₽</button>
+                      </div>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3 flex items-center gap-3">
+                      <input type="range" :min="minPrice" :max="maxPrice" v-model="price" class="flex-1 accent-emerald-500" step="100" />
+                      <input type="number" v-model="price" :min="minPrice" :max="maxPrice" @input="onPriceInput" class="w-28 rounded-xl border border-slate-200 px-3 py-2 outline-none focus:border-emerald-400" />
+                      <span class="text-sm text-slate-500">₽</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-400 mt-1">
+                      <span>{{ minPrice.toLocaleString() }} ₽</span>
+                      <span>{{ maxPrice.toLocaleString() }} ₽</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <!-- STEP 3 -->
+            <template v-else-if="currentStep === 3">
+              <div class="grid gap-6">
+                <div>
+                  <label class="block text-sm font-semibold text-slate-600 mb-2">Референсы (изображения, до 6)</label>
+                  <div
+                    class="rounded-3xl border-2 border-dashed transition"
+                    :class="isDragging ? 'border-emerald-400 bg-emerald-50/50' : 'border-slate-200 bg-white'"
+                    @dragover.prevent="isDragging = true"
+                    @dragleave.prevent="isDragging = false"
+                    @drop.prevent="handleDrop"
+                  >
+                    <div class="px-6 py-10 text-center">
+                      <div class="mx-auto mb-3 w-12 h-12 rounded-2xl bg-emerald-500/10 grid place-content-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-emerald-600" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16a1 1 0 0 1-1-1V8.41l-2.3 2.3a1 1 0 1 1-1.4-1.42l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.42L13 8.4V15a1 1 0 0 1-1 1Z"/><path d="M5 19a2 2 0 0 1-2-2V9a1 1 0 1 1 2 0v8h14V9a1 1 0 1 1 2 0v8a2 2 0 0 1-2 2H5Z"/></svg>
+                      </div>
+                      <p class="text-sm text-slate-600">
+                        Перетащите сюда файлы или
+                        <label class="text-emerald-600 font-semibold cursor-pointer hover:underline">
+                          выберите
+                          <input type="file" accept="image/*" class="hidden" multiple @change="onImageChange" />
+                        </label>
+                      </p>
+                      <p class="text-xs text-slate-400 mt-1">JPEG/PNG/WebP, до 6 изображений</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <div v-for="(img, idx) in images" :key="img.name + idx" class="relative rounded-2xl overflow-hidden ring-1 ring-slate-200 group">
+                      <img :src="img.src" :alt="img.name" class="w-full h-28 object-cover" />
+                      <button
+                        @click="removeImage(idx)"
+                        class="absolute top-2 right-2 w-8 h-8 grid place-content-center rounded-full bg-white/90 text-rose-600 shadow hover:bg-white"
+                        title="Удалить"
+                      >×</button>
+                    </div>
+                  </div>
+                  <p v-if="images.length" class="text-xs text-slate-400 mt-2">Изображения пока не отправляются на сервер (демо).</p>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-slate-600 mb-2">Файлы (ТЗ, бриф, архивы) — опционально</label>
+                  <div class="flex flex-wrap gap-2">
+                    <label class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16a1 1 0 0 1-1-1V8.41l-2.3 2.3a1 1 0 1 1-1.4-1.42l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.42L13 8.4V15a1 1 0 0 1-1 1Z"/><path d="M5 19a2 2 0 0 1-2-2V9a1 1 0 1 1 2 0v8h14V9a1 1 0 1 1 2 0v8a2 2 0 0 1-2 2H5Z"/></svg>
+                      <span class="text-sm">Загрузить файлы</span>
+                      <input type="file" class="hidden" multiple @change="onFileChange" />
+                    </label>
+                    <span v-for="(file, idx) in files" :key="file.name + idx" class="inline-flex items-center gap-2 rounded-full bg-white border border-slate-200 px-3 py-1 text-xs">
+                      {{ file.name }}
+                      <button @click="removeFile(idx)" class="text-rose-500 hover:text-rose-600" title="Удалить">×</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <!-- STEP 4 -->
+            <template v-else-if="currentStep === 4">
+              <div class="grid gap-4 text-center">
+                <div class="mx-auto w-16 h-16 rounded-2xl bg-emerald-500/10 grid place-content-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12.75 7.5 11.25a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l7-7a.75.75 0 1 0-1.06-1.06L9 12.75Z"/></svg>
+                </div>
+                <h2 class="text-2xl font-bold">Почти готово 🎉</h2>
+                <p class="text-slate-600">
+                  Проверьте данные. После публикации исполнители увидят ваш заказ и смогут откликнуться.
+                </p>
+              </div>
+            </template>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-between pt-2">
+              <button v-if="currentStep > 1" @click="prevStep" class="px-6 py-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition">
+                Назад
+              </button>
+              <div class="flex-1" />
+              <button v-if="currentStep < steps.length" @click="nextStep" :disabled="!canNext"
+                      class="px-8 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition disabled:opacity-50">
+                Дальше
+              </button>
+              <button v-else @click="publish" class="px-8 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 transition">
+                Опубликовать заказ
+              </button>
+            </div>
+
+            <p v-if="errorMsg" class="text-rose-600 text-sm text-center">{{ errorMsg }}</p>
+          </div>
+        </Transition>
+      </section>
+
+      <!-- Sidebar summary -->
+      <aside class="space-y-4">
+        <div class="sticky top-24 rounded-3xl bg-white/70 ring-1 ring-slate-200 shadow-lg shadow-slate-200/50 overflow-hidden">
+          <div class="p-5 border-b border-slate-100">
+            <h3 class="text-sm font-semibold text-slate-600">Сводка заказа</h3>
+          </div>
+          <div class="p-5 grid gap-4 text-sm">
+            <div>
+              <div class="text-slate-400">Название</div>
+              <div class="font-semibold text-slate-800">{{ workTitle || '—' }}</div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="text-slate-400">Категория</div>
+                <div class="font-medium">{{ selectedCategory || '—' }}</div>
+              </div>
+              <div>
+                <div class="text-slate-400">Подкатегория</div>
+                <div class="font-medium">{{ selectedSubcategory || '—' }}</div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="text-slate-400">Бюджет</div>
+                <div class="font-semibold text-emerald-700">{{ fmtPrice(price) }}</div>
+              </div>
+              <div>
+                <div class="text-slate-400">Срок</div>
+                <div class="font-semibold">{{ deadline }} дн.</div>
+              </div>
+            </div>
+            <div v-if="tags.length" class="flex flex-wrap gap-2">
+              <span v-for="(t,i) in tags.slice(0,6)" :key="t+i" class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs">#{{ t }}</span>
+              <span v-if="tags.length>6" class="text-xs text-slate-500">+{{ tags.length-6 }}</span>
+            </div>
+
+            <div v-if="images.length" class="grid grid-cols-3 gap-2">
+              <img v-for="(img, i) in images.slice(0,3)" :key="i" :src="img.src" class="h-16 w-full object-cover rounded-xl ring-1 ring-slate-200" />
+            </div>
+
+            <div class="text-xs text-slate-500">
+              Совет: конкретика по результату и 1–3 референса повышают качество откликов.
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
   </div>
 </template>
 
 <style scoped>
-.slider-enter-active, .slider-leave-active,
-.slider-back-enter-active, .slider-back-leave-active {
-  transition: all 0.5s cubic-bezier(.73,.21,.28,.99);
-  position: relative;
-  z-index: 1;
+.slide-enter-active, .slide-leave-active,
+.slide-back-enter-active, .slide-back-leave-active {
+  transition: all .45s cubic-bezier(.2,.9,.2,1);
 }
-.slider-enter-from {
-  opacity: 0;
-  transform: translateX(60px);
-}
-.slider-leave-to {
-  opacity: 0;
-  transform: translateX(-60px);
-}
-.slider-back-enter-from {
-  opacity: 0;
-  transform: translateX(-60px);
-}
-.slider-back-leave-to {
-  opacity: 0;
-  transform: translateX(60px);
-}
-.slider-enter-to, .slider-leave-from,
-.slider-back-enter-to, .slider-back-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
+.slide-enter-from { opacity: 0; transform: translateY(14px) scale(.98); }
+.slide-leave-to   { opacity: 0; transform: translateY(-14px) scale(.98); }
+.slide-back-enter-from { opacity: 0; transform: translateY(-14px) scale(.98); }
+.slide-back-leave-to   { opacity: 0; transform: translateY(14px) scale(.98); }
 </style>

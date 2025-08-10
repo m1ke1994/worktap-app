@@ -55,19 +55,19 @@ const isAuth = computed(() => !!userStore.user)
               <router-link
                 to="/all-works"
                 class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300"
-              >Биржа заданий</router-link>
+              >Заказы от клиентов</router-link>
               <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1DBF73] transition-all duration-300 group-hover:w-full"></span>
             </li>
             <li class="group relative">
-              <router-link to="#" class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Биржа услуг</router-link>
+              <router-link to="#" class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Предложения исполнителей</router-link>
               <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1DBF73] transition-all duration-300 group-hover:w-full"></span>
             </li>
             <li class="group relative">
-              <router-link to="/create-job" class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Опубликовать услугу</router-link>
+              <router-link to="/create-job" class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Разместить предложение</router-link>
               <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1DBF73] transition-all duration-300 group-hover:w-full"></span>
             </li>
             <li class="group relative">
-              <router-link to="/create-work"  class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Создать задание</router-link>
+              <router-link to="/create-work"  class="text-gray-700 hover:text-[#1DBF73] transition-colors duration-300">Разместить заказ</router-link>
               <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1DBF73] transition-all duration-300 group-hover:w-full"></span>
             </li>
           </ul>
